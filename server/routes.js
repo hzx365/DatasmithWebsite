@@ -116,7 +116,7 @@ const job = async function (req, res) {
 }
 // Route 5: GET /job/:job_id/courses 
 const job_courses = async function (req, res) {
-  // TODO (TASK 5): implement a route that given a job_id, returns all information about the job
+  // TODO (TASK 5): implement a route that given a job_id, returns the relavent courses
   const requestID = req.params.job_id;
   connection.query(`
   SELECT * 
