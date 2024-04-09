@@ -31,12 +31,12 @@ export default function AlbumsPage() {
           m={2}
           style={{ background: 'white', borderRadius: '16px', border: '2px solid #000' }}
         >
-          {
+
           <img
             src={album.thumbnail_url}
             alt={`${album.title} album art`}
           />
-          }
+
           <h4><NavLink to={`/albums/${album.album_id}`}>{album.title}</NavLink></h4>
         </Box>
       )}

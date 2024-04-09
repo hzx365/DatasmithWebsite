@@ -20,29 +20,28 @@ export default function SongCard({ songId, handleClose }) {
   // Hint: you need to both fill in the callback and the dependency array (what variable determines the information you need to fetch?)
   // Hint: since the second fetch depends on the information from the first, try nesting the second fetch within the then block of the first (pseudocode is provided)
   useEffect(() => {
-    // Hint: here is some pseudocode to guide you
-    // fetch(song data, id determined by songId prop)
-    //   .then(res => res.json())
-    //   .then(resJson => {
-    //     set state variable with song dta
-    //     fetch(album data, id determined by result in resJson)
-    //       .then(res => res.json())
-    //       .then(resJson => set state variable with album data)
-    //     })
-    if (songId) {
-      fetch(`http://${config.server_host}:${config.server_port}/song/${songId}`)
-          .then(res => res.json())
-          .then(songData => {
-            setSongData(songData);
-            return fetch(`http://${config.server_host}:${config.server_port}/album/${songData.album_id}`);
-          })
-          .then(res => res.json())
-          .then(albumData => {
-            setAlbumData(albumData);
-          })
-          .catch(error => console.error('Error fetching song or album data:', error));
+    async function fetchData() {
+      // Hint: here is some pseudocode to guide you
+      // fetch(song data, id determined by songId prop)
+      //   .then(res => res.json())
+      //   .then(resJson => {
+      //     set state variable with song dta
+      //     fetch(album data, id determined by result in resJson)
+      //       .then(res => res.json())
+      //       .then(resJson => set state variable with album data)
+      //     })
+      const response = await fetch(`http://${config.server_host}:${config.server_port}/song/${songId}`);
+      const data = await response.json();
+      setSongData(data);
+
+      const response2 = await fetch(`http://${config.server_host}:${config.server_port}/album/${data.album_id}`);
+      const data2 = await response2.json();
+      setAlbumData(data2);
     }
+    fetchData();
   }, [songId]);
+
+
 
   const chartData = [
     { name: 'Danceability', value: songData.danceability },
@@ -95,12 +94,11 @@ export default function SongCard({ songId, handleClose }) {
                   {/* TODO (TASK 21): display the same data as the bar chart using a radar chart */}
                   {/* Hint: refer to documentation at https://recharts.org/en-US/api/RadarChart */}
                   {/* Hint: note you can omit the <Legend /> element and only need one Radar element, as compared to the sample in the docs */}
-
-                  <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
+                  <RadarChart outerRadius={90} width={730} height={250} data={chartData}>
                     <PolarGrid />
                     <PolarAngleAxis dataKey="name" />
                     <PolarRadiusAxis angle={30} domain={[0, 1]} />
-                    <Radar name="Metrics" dataKey="value" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
+                    <Radar dataKey="value" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
                   </RadarChart>
                 </ResponsiveContainer>
               )
