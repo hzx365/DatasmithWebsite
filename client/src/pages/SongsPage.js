@@ -51,9 +51,11 @@ export default function SongsPage() {
   // LazyTable component. The big difference is we provide all data to the DataGrid component
   // instead of loading only the data we need (which is necessary in order to be able to sort by column)
   const columns = [
-    { field: 'title', headerName: 'Title', width: 300, renderCell: (params) => (
+    {
+      field: 'title', headerName: 'Title', width: 300, renderCell: (params) => (
         <Link onClick={() => setSelectedSongId(params.row.song_id)}>{params.value}</Link>
-    ) },
+      )
+    },
     { field: 'duration', headerName: 'Duration' },
     { field: 'plays', headerName: 'Plays' },
     { field: 'danceability', headerName: 'Danceability' },
@@ -77,7 +79,7 @@ export default function SongsPage() {
       <h2>Search Songs</h2>
       <Grid container spacing={6}>
         <Grid item xs={8}>
-          <TextField label='Title' value={title} onChange={(e) => setTitle(e.target.value)} style={{ width: "100%" }}/>
+          <TextField label='Title' value={title} onChange={(e) => setTitle(e.target.value)} style={{ width: "100%" }} />
         </Grid>
         <Grid item xs={4}>
           <FormControlLabel
@@ -112,41 +114,46 @@ export default function SongsPage() {
         {/* TODO (TASK 24): add sliders for danceability, energy, and valence (they should be all in the same row of the Grid) */}
         {/* Hint: consider what value xs should be to make them fit on the same row. Set max, min, and a reasonable step. Is valueLabelFormat is necessary? */}
         <Grid item xs={4}>
-          <p>Danceability (0-1)</p>
+          <p>Danceability</p>
           <Slider
-              value={danceability}
-              onChange={(e, newValue) => setDanceability(newValue)}
-              valueLabelDisplay="auto"
-              min={0}
-              max={1}
-              step={0.01}
+            value={danceability}
+            min={0}
+            max={1}
+            step={0.01}
+            onChange={(e, newValue) => setDanceability(newValue)}
+            valueLabelDisplay='auto'
+            valueLabelFormat={value => <div>{value}</div>}
           />
         </Grid>
+
         <Grid item xs={4}>
-          <p>Energy (0-1)</p>
+          <p>Energy</p>
           <Slider
-              value={energy}
-              onChange={(e, newValue) => setEnergy(newValue)}
-              valueLabelDisplay="auto"
-              min={0}
-              max={1}
-              step={0.01}
+            value={energy}
+            min={0}
+            max={1}
+            step={0.01}
+            onChange={(e, newValue) => setEnergy(newValue)}
+            valueLabelDisplay='auto'
+            valueLabelFormat={value => <div>{value}</div>}
           />
         </Grid>
+
         <Grid item xs={4}>
-          <p>Valence (0-1)</p>
+          <p>Valence</p>
           <Slider
-              value={valence}
-              onChange={(e, newValue) => setValence(newValue)}
-              valueLabelDisplay="auto"
-              min={0}
-              max={1}
-              step={0.01}
+            value={valence}
+            min={0}
+            max={1}
+            step={0.01}
+            onChange={(e, newValue) => setValence(newValue)}
+            valueLabelDisplay='auto'
+            valueLabelFormat={value => <div>{value}</div>}
           />
         </Grid>
 
       </Grid>
-      <Button onClick={() => search() } style={{ left: '50%', transform: 'translateX(-50%)' }}>
+      <Button onClick={() => search()} style={{ left: '50%', transform: 'translateX(-50%)' }}>
         Search
       </Button>
       <h2>Results</h2>

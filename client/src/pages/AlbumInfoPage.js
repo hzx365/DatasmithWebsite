@@ -29,7 +29,7 @@ export default function AlbumInfoPage() {
       {selectedSongId && <SongCard songId={selectedSongId} handleClose={() => setSelectedSongId(null)} />}
       <Stack direction='row' justify='center'>
         <img
-            key={albumData.album_id}
+          key={albumData.album_id}
           src={albumData.thumbnail_url}
           alt={`${albumData.title} album art`}
           style={{
@@ -54,21 +54,31 @@ export default function AlbumInfoPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {songData.map((song) => (
+            {
               // TODO (TASK 23): render the table content by mapping the songData array to <TableRow> elements
               // Hint: the skeleton code for the very first row is provided for you. Fill out the missing information and then use a map function to render the rest of the rows.
               // Hint: it may be useful to refer back to LazyTable.js
-              <TableRow key={songData[0].song_id}>
-                <TableCell key='#'>{songData[0].number}</TableCell>
+              // <TableRow key={songData[0].song_id}>
+              //   <TableCell key='#'>{songData[0].number}</TableCell>
+              //   <TableCell key='Title'>
+              //     <Link onClick={() => setSelectedSongId(songData[0].song_id)}>
+              //       Replace me
+              //     </Link>
+              //   </TableCell>
+              //   <TableCell key='Plays'>songData[0].plays</TableCell>
+              //   <TableCell key='Duration'>{formatDuration(songData[0].duration)}(use the formatDuration helper function, see SongCard.js for an example)</TableCell>
+              // </TableRow>
+              songData.map(data => <TableRow key={data.song_id}><TableCell key='#'>{data.number}</TableCell>
                 <TableCell key='Title'>
-                  <Link onClick={() => setSelectedSongId(songData[0].song_id)}>
-                    {song.title}
+                  <Link onClick={() => setSelectedSongId(data.song_id)}>
+                    {data.title}
                   </Link>
                 </TableCell>
-                <TableCell key='Plays'>{song.plays}</TableCell>
-                <TableCell key='Duration'>>{formatDuration(song.duration)}</TableCell>
-              </TableRow>
-            ))}
+                <TableCell key='Plays'>{data.plays}</TableCell>
+                <TableCell key='Duration'>{formatDuration(data.duration)}</TableCell>
+              </TableRow>)
+            }
+
           </TableBody>
         </Table>
       </TableContainer>
