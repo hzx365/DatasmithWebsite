@@ -81,7 +81,7 @@ const random = async function (req, res) {
 const course = async function (req, res) {
   // TODO (TASK 4): implement a route that given a course_id, returns all information about the course
 
-  // save the given song-id to variable requestID
+  // save the given course-id to variable requestID
   const requestID = req.params.course_id;
   connection.query(`
   SELECT * 
