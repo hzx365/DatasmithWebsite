@@ -20,8 +20,8 @@ connection.connect((err) => err && console.log(err));
 // Route 1: GET /author/:type
 const author = async function (req, res) {
   // TODO (TASK 1): replace the values of name and pennKey with your own
-  const name = 'Yuanmin Zhang';
-  const pennKey = 'yuz249';
+  const name = 'Yuanmin Zhang, Lu Lu';
+  const pennKey = 'yuz249, lhlu';
 
   // checks the value of type the request parameters
   // note that parameters are required and are specified in server.js in the endpoint by a colon (e.g. /author/:type)
@@ -298,9 +298,9 @@ module.exports = {
   top_songs,
   top_albums,
 
-  job,
-  job_courses,
-  search_jobs,
+  job, //@yuanmin
+  job_courses, //@yuanmin
+  search_jobs, //@yuanmin
 
   course,//@lulu
   course_jobs, //@lulu
