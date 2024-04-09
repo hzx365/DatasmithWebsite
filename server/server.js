@@ -22,16 +22,16 @@ app.get('/top_jobs', routes.top_jobs);
 app.get('/search_jobs', routes.search_jobs);
 
 //course page: 
-app.get('/search_courses', routes.search_courses);
+app.get('/search_courses', routes.search_courses); //lulu
 
 // job details:
 app.get('/job/:job_id', routes.job);
 
 //course details:
-app.get('/course/:course_id', routes.course);
+app.get('/course/:course_id', routes.course);//lulu
 
 // app.get('/jobs', routes.albums);
-// nothing
+
 
 
 
