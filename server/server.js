@@ -10,7 +10,7 @@ app.use(cors({
 
 // We use express to define our various API endpoints and
 // provide their handlers that we implemented in routes.js
-app.get('/author/:type', routes.author);
+app.get('/author/:type', routes.author); // @yuanmin, lulu, 
 // app.get('/random', routes.random);
 
 //home page: 
@@ -19,22 +19,20 @@ app.get('/author/:type', routes.author);
 // app.get('/job_related_courses/:album_id', routes.album_songs);
 
 //glassdoor jobs page:
-app.get('/search_jobs', routes.search_jobs);
+app.get('/search_jobs', routes.search_jobs); //@yuanmin
 
 //course page: 
-//app.get('/search_courses', routes.search_courses); //lulu
+app.get('/search_courses', routes.search_courses); //@lulu
 
 // job details:
-app.get('/job/:job_id', routes.job);
-app.get('/job/:job_id/courses', routes.job_courses);
+app.get('/job/:job_id', routes.job); //@yuanmin
+app.get('/job/:job_id/courses', routes.job_courses); //@yuanmin
 
 //course details:
-//app.get('/course/:course_id', routes.course);//lulu
+app.get('/course/:course_id', routes.course);//@lulu
+app.get('/job/:course_id/jobs', routes.course_jobs) //@lulu
 
 // app.get('/jobs', routes.albums);
-// Zhixiang Huang update main
-
-//test lulu's branch change
 
 
 

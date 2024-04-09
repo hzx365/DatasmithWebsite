@@ -77,18 +77,16 @@ const random = async function (req, res) {
  * BASIC SONG/ALBUM INFO ROUTES *
  ********************************/
 
-// Route 3: GET /song/:song_id
-const song = async function (req, res) {
-  // TODO (TASK 4): implement a route that given a song_id, returns all information about the song
-  // Hint: unlike route 2, you can directly SELECT * and just return data[0]
-  // Most of the code is already written for you, you just need to fill in the query
+// Route 3: GET /course/:course_id
+const course = async function (req, res) {
+  // TODO (TASK 4): implement a route that given a course_id, returns all information about the course
 
   // save the given song-id to variable requestID
-  const requestID = req.params.song_id;
+  const requestID = req.params.course_id;
   connection.query(`
   SELECT * 
-  FROM Songs
-  WHERE song_id = ? `, [requestID], (err, data) => {
+  FROM Course_Info
+  WHERE Course_Info.id = ?`, [requestID], (err, data) => {
     if (err || data.length === 0) {
       console.log(err);
       res.json({});
@@ -130,15 +128,15 @@ const job_courses = async function (req, res) {
     }
   });
 }
-// Route 6: GET /album_songs/:album_id
-const album_songs = async function (req, res) {
-  // TODO (TASK 7): implement a route that given an album_id, returns all songs on that album ordered by track number (ascending)
-  const requestID = req.params.album_id;
+// Route 6: GET /course/:course_id/jobs
+const course_jobs = async function (req, res) {
+  // TODO (TASK 7): implement a route that given an course_id, returns relavent jobs
+  const requestID = req.params.course_id;
   connection.query(`
-  SELECT Songs.song_id, Songs.title, Songs.number, Songs.duration, Songs.plays FROM Songs
-INNER JOIN Albums on Songs.album_id = Albums.album_id
-WHERE Albums.album_id = ?
-ORDER BY number ASC`, [requestID], (err, data) => {
+  SELECT *
+  FROM Courses_Jobs
+  WHERE course_id = ?
+  `, [requestID], (err, data) => {
     if (err || data.length === 0) {
       console.log(err);
       res.json([]);
@@ -262,14 +260,50 @@ const search_jobs = async function (req, res) {
     });
 }
 
+// Route 10: GET /search_courses?language=...&rating=...&category
+const search_courses = async function (req, res) {
+  // TODO (TASK 12): return all courses that match the given search query with parameters defaulted to those specified in API spec ordered by number of subscribers (desc)
+  // Some default parameters have been provided for you, but you will need to fill in the rest
+
+  const language = req.query.language;
+  const rating = req.query.rating;
+  const category = req.query.category;
+
+
+  // If title is undefined, no filter should be applied (return all courses matching the other conditions).
+  
+  connection.query(`
+    SELECT *
+    FROM Course_Info
+    WHERE Course_Info.language = ? AND Course_Info.avg_rating = ? AND Course_Info.category = ?
+    ORDER BY Course_Info.num_subscribers DESC;`,
+    [language, rating, category],
+    (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data); // replace this with your implementation
+      }
+    });
+}
+
+
+
 module.exports = {
-  author,
+  author, 
   random,
-  song,
+
+
+  top_songs,
+  top_albums,
+
   job,
   job_courses,
   search_jobs,
-  album_songs,
-  top_songs,
-  top_albums,
+
+  course,//@lulu
+  course_jobs, //@lulu
+  search_courses, //@lulu
+
 }
