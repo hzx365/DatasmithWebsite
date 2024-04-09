@@ -114,7 +114,7 @@ const job = async function (req, res) {
     }
   });
 }
-// Route 4.1: GET /job/:job_id/courses 
+// Route 5: GET /job/:job_id/courses 
 const job_courses = async function (req, res) {
   // TODO (TASK 5): implement a route that given a job_id, returns all information about the job
   const requestID = req.params.job_id;
@@ -130,24 +130,6 @@ const job_courses = async function (req, res) {
     }
   });
 }
-// Route 5: GET /albums
-const albums = async function (req, res) {
-  // TODO (TASK 6): implement a route that returns all albums ordered by release date (descending)
-  // Note that in this case you will need to return multiple albums, so you will need to return an array of objects
-  connection.query(`
-  SELECT * 
-  FROM Albums
-  ORDER BY release_date DESC `, (err, data) => {
-    if (err || data.length === 0) {
-      console.log(err);
-      res.json([]);
-    } else {
-      res.json(data); // replace this with your implementation
-    }
-  })
-
-}
-
 // Route 6: GET /album_songs/:album_id
 const album_songs = async function (req, res) {
   // TODO (TASK 7): implement a route that given an album_id, returns all songs on that album ordered by track number (ascending)
@@ -252,74 +234,32 @@ LIMIT ? OFFSET ?;`, [pageSizeNum, offSet], (err, data) => {
   }
 }
 
-// Route 9: GET /search_albums
-const search_songs = async function (req, res) {
-  // TODO (TASK 12): return all songs that match the given search query with parameters defaulted to those specified in API spec ordered by title (ascending)
+// Route 9: GET /search_jobs?city=...&country=...&category
+const search_jobs = async function (req, res) {
+  // TODO (TASK 12): return all jobs that match the given search query with parameters defaulted to those specified in API spec ordered by posted date (desc)
   // Some default parameters have been provided for you, but you will need to fill in the rest
-  const explicit = req.query.explicit === 'true' ? 1 : 0;
-  const title = req.query.title ?? '';
 
-  const durationLow = req.query.duration_low ? parseInt(req.query.duration_low) : 60;
-  const durationHigh = req.query.duration_high ? parseInt(req.query.duration_high) : 660;
-
-  const playsLow = req.query.plays_low ? parseInt(req.query.plays_low) : 0;
-  const playsHigh = req.query.plays_high ? parseInt(req.query.plays_high) : 1100000000;
-
-  const danceabilityLow = req.query.danceability_low ? parseFloat(req.query.danceability_low) : 0;
-  const danceabilityHigh = req.query.danceability_high ? parseFloat(req.query.danceability_high) : 1;
-
-  const energyLow = req.query.energy_low ? parseFloat(req.query.energy_low) : 0;
-  const energyHigh = req.query.energy_high ? parseFloat(req.query.energy_high) : 1;
-
-  const valenceLow = req.query.valence_low ? parseFloat(req.query.valence_low) : 0;
-  const valenceHigh = req.query.valence_high ? parseFloat(req.query.valence_high) : 1;
+  const city = req.query.city;
+  const country = req.query.country;
+  const category = req.query.category;
 
 
   // If title is undefined, no filter should be applied (return all songs matching the other conditions).
-  if (title === '') {
-    connection.query(`
-      SELECT Songs.song_id, Albums.album_id, Songs.title, Songs.number, Songs.duration, Songs.plays, Songs.danceability, Songs.energy,
-        Songs.valence, Songs.tempo, Songs.key_mode, Songs.explicit FROM Songs
-  INNER JOIN Albums ON Songs.album_id = Albums.album_id
-  WHERE Songs.duration >= ? AND Songs.duration <= ?
-    AND Songs.plays >= ? AND Songs.plays <=?
-    AND Songs.danceability >= ? AND Songs.danceability <= ?
-    AND Songs.energy >= ? AND Songs.energy <= ?
-    AND Songs.valence >= ? AND Songs.valence <= ?
-    AND Songs.explicit <= ?
-  ORDER BY Songs.title ASC;`, [durationLow, durationHigh, playsLow, playsHigh, danceabilityLow, danceabilityHigh, energyLow, energyHigh, valenceLow, valenceHigh, explicit], (err, data) => {
+
+  connection.query(`
+    SELECT *
+    FROM Jobs
+    WHERE Jobs.city = ? AND Jobs.country = ?AND Jobs.category = ?
+    ORDER BY Jobs.discover_date DESC;`,
+    [city, country, category],
+    (err, data) => {
       if (err || data.length === 0) {
         console.log(err);
         res.json([]);
       } else {
         res.json(data); // replace this with your implementation
       }
-    })
-
-  }
-
-  // If title is specified, match all songs with titles that contain the title query parameter as a substring.
-  else {
-    connection.query(`
-    SELECT Songs.song_id, Albums.album_id, Songs.title, Songs.number, Songs.duration, Songs.plays, Songs.danceability, Songs.energy,
-      Songs.valence, Songs.tempo, Songs.key_mode, Songs.explicit FROM Songs
-INNER JOIN Albums ON Songs.album_id = Albums.album_id
-WHERE Songs.title LIKE ?
-  AND Songs.duration >= ? AND Songs.duration <= ?
-  AND Songs.plays >= ? AND Songs.plays <= ?
-  AND Songs.danceability >= ? AND Songs.danceability <= ?
-  AND Songs.energy >= ? AND Songs.energy <= ?
-  AND Songs.valence >= ? AND Songs.valence <= ?
-  AND Songs.explicit <= ?
-ORDER BY Songs.title ASC;`, [`%${title}%`, durationLow, durationHigh, playsLow, playsHigh, danceabilityLow, danceabilityHigh, energyLow, energyHigh, valenceLow, valenceHigh, explicit], (err, data) => {
-      if (err || data.length === 0) {
-        console.log(err);
-        res.json([]);
-      } else {
-        res.json(data); // replace this with your implementation
-      }
-    })
-  }
+    });
 }
 
 module.exports = {
@@ -328,9 +268,8 @@ module.exports = {
   song,
   job,
   job_courses,
-  albums,
+  search_jobs,
   album_songs,
   top_songs,
   top_albums,
-  search_songs,
 }

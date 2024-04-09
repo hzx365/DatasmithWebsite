@@ -19,7 +19,7 @@ app.get('/author/:type', routes.author);
 // app.get('/job_related_courses/:album_id', routes.album_songs);
 
 //glassdoor jobs page:
-//app.get('/search_jobs', routes.search_jobs);
+app.get('/search_jobs', routes.search_jobs);
 
 //course page: 
 //app.get('/search_courses', routes.search_courses); //lulu
