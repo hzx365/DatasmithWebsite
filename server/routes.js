@@ -98,14 +98,14 @@ const song = async function (req, res) {
   });
 }
 
-// Route 4: GET /album/:album_id
-const album = async function (req, res) {
-  // TODO (TASK 5): implement a route that given a album_id, returns all information about the album
-  const requestID = req.params.album_id;
+// Route 4: GET /job/:job_id 
+const job = async function (req, res) {
+  // TODO (TASK 5): implement a route that given a job_id, returns all information about the job
+  const requestID = req.params.job_id;
   connection.query(`
   SELECT * 
-  FROM Albums
-  WHERE album_id = ?`, [requestID], (err, data) => {
+  FROM Jobs
+  WHERE uid = ?`, [requestID], (err, data) => {
     if (err || data.length === 0) {
       console.log(err);
       res.json({});
@@ -114,7 +114,22 @@ const album = async function (req, res) {
     }
   });
 }
-
+// Route 4.1: GET /job/:job_id/courses 
+const job_courses = async function (req, res) {
+  // TODO (TASK 5): implement a route that given a job_id, returns all information about the job
+  const requestID = req.params.job_id;
+  connection.query(`
+  SELECT * 
+  FROM Jobs_Courses
+  WHERE job_uid = ?`, [requestID], (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json({});
+    } else {
+      res.json(data[0]);
+    }
+  });
+}
 // Route 5: GET /albums
 const albums = async function (req, res) {
   // TODO (TASK 6): implement a route that returns all albums ordered by release date (descending)
@@ -311,7 +326,8 @@ module.exports = {
   author,
   random,
   song,
-  album,
+  job,
+  job_courses,
   albums,
   album_songs,
   top_songs,

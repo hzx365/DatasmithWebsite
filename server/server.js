@@ -14,21 +14,22 @@ app.get('/author/:type', routes.author);
 // app.get('/random', routes.random);
 
 //home page: 
-app.get('/top_courses', routes.top_courses);
-app.get('/top_jobs', routes.top_jobs);
+//app.get('/top_courses', routes.top_courses);
+//app.get('/top_jobs', routes.top_jobs);
 // app.get('/job_related_courses/:album_id', routes.album_songs);
 
 //glassdoor jobs page:
-app.get('/search_jobs', routes.search_jobs);
+//app.get('/search_jobs', routes.search_jobs);
 
 //course page: 
-app.get('/search_courses', routes.search_courses); //lulu
+//app.get('/search_courses', routes.search_courses); //lulu
 
 // job details:
 app.get('/job/:job_id', routes.job);
+app.get('/job/:job_id/courses', routes.job_courses);
 
 //course details:
-app.get('/course/:course_id', routes.course);//lulu
+//app.get('/course/:course_id', routes.course);//lulu
 
 // app.get('/jobs', routes.albums);
 // Zhixiang Huang update main
