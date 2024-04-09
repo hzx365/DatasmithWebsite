@@ -31,7 +31,7 @@ app.get('/job/:job_id', routes.job);
 app.get('/course/:course_id', routes.course);
 
 // app.get('/jobs', routes.albums);
-
+// nothing
 
 
 
