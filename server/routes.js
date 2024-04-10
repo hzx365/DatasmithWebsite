@@ -277,7 +277,7 @@ const search_courses = async function (req, res) {
     FROM Course_Info
     WHERE Course_Info.language = ? AND Course_Info.avg_rating = ? AND Course_Info.category = ?
     ORDER BY Course_Info.num_subscribers DESC;`,
-    [language, rating, category],
+    [language, parseFloat(rating), category],
     (err, data) => {
       if (err || data.length === 0) {
         console.log(err);
