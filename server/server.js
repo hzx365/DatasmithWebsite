@@ -30,7 +30,7 @@ app.get('/job/:job_id/courses', routes.job_courses); //@yuanmin
 
 //course details:
 app.get('/course/:course_id', routes.course);//@lulu
-app.get('/job/:course_id/jobs', routes.course_jobs) //@lulu
+app.get('/course/:course_id/jobs', routes.course_jobs) //@lulu
 
 // app.get('/jobs', routes.albums);
 

@@ -124,7 +124,7 @@ const job_courses = async function (req, res) {
       console.log(err);
       res.json({});
     } else {
-      res.json(data[0]);
+      res.json(data);
     }
   });
 }
@@ -271,7 +271,7 @@ const search_courses = async function (req, res) {
 
 
   // If title is undefined, no filter should be applied (return all courses matching the other conditions).
-  
+
   connection.query(`
     SELECT *
     FROM Course_Info
@@ -291,7 +291,7 @@ const search_courses = async function (req, res) {
 
 
 module.exports = {
-  author, 
+  author,
   random,
 
 
