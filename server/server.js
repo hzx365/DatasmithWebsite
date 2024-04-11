@@ -13,8 +13,8 @@ app.use(cors({
 app.get('/author/:type', routes.author); // (1) @yuanmin, lulu,
 
 // home page:
-app.get('/top_courses', routes.top_courses);// (2) @yarong
-app.get('/top_jobs', routes.top_jobs);// (3) @yarong
+app.get('/top_jobs', routes.top_jobs);// (2) @yarong
+app.get('/top_courses', routes.top_courses);// (3) @yarong
 
 // glassdoor jobs page:
 app.get('/search_jobs', routes.search_jobs); // (4) @yuanmin

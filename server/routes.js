@@ -42,7 +42,52 @@ const author = async function (req, res) {
  *         HOME PAGE       *
  **************************/
 
-// Route 2: GET /top_courses
+// Route 2: GET /top_jobs
+const top_jobs = async function (req, res) {
+  const page = req.query.page;
+  // Use the ternary (or nullish) operator to set the pageSize based on the query or default to 10
+  const pageNum = page ?? parseInt(page);
+  const pageSizeNum = req.query.page_size ? parseInt(req.query.page_size) : 10;
+  if (!page) {
+    // Query the database and return top 50 jobs by benefit_rating (descending)
+    connection.query(`
+    SELECT Jobs.uid as job_uid, Jobs.job_title as job_title, Jobs.category as category, Jobs.benefit_rating as benefit_rating,
+       Jobs.city as job_city, Jobs.country as country, Jobs.description as description, Jobs.employer_name as employer_name,
+       Jobs.reviews as reviews, Jobs.discover_date as discover_date
+    FROM Jobs
+    ORDER BY Jobs.benefit_rating DESC
+    LIMIT 50;`, (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data);
+      }
+    })
+  }
+  else {
+    // Reimplement with pagination
+    const offSet = (pageNum - 1) * pageSizeNum;
+    connection.query(`
+    SELECT Top_Jobs.uid as job_uid, Top_Jobs.job_title as job_title, Top_Jobs.category as category, Top_Jobs.benefit_rating as benefit_rating,
+    Top_Jobs.city as job_city, Top_Jobs.country as country, Top_Jobs.description as description, Top_Jobs.employer_name as employer_name,
+    Top_Jobs.reviews as reviews, Top_Jobs.discover_date as discover_date
+    FROM (SELECT *
+          FROM Jobs
+          ORDER BY Jobs.benefit_rating DESC
+          LIMIT 50) AS Top_Jobs
+    LIMIT ? OFFSET ?;`, [pageSizeNum, offSet], (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data);
+      }
+    })
+  }
+}
+
+// Route 3: GET /top_courses
 const top_courses = async function (req, res) {
   // Return the top courses by avg_rating (descending)
   const page = req.query.page;
@@ -88,52 +133,6 @@ const top_courses = async function (req, res) {
     })
   }
 }
-
-// Route 3: GET /top_jobs
-const top_jobs = async function (req, res) {
-  const page = req.query.page;
-  // Use the ternary (or nullish) operator to set the pageSize based on the query or default to 10
-  const pageNum = page ?? parseInt(page);
-  const pageSizeNum = req.query.page_size ? parseInt(req.query.page_size) : 10;
-  if (!page) {
-    // Query the database and return top 50 jobs by benefit_rating (descending)
-    connection.query(`
-    SELECT Jobs.uid as job_uid, Jobs.job_title as job_title, Jobs.category as category, Jobs.benefit_rating as benefit_rating,
-       Jobs.city as job_city, Jobs.country as country, Jobs.description as description, Jobs.employer_name as employer_name,
-       Jobs.reviews as reviews, Jobs.discover_date as discover_date
-    FROM Jobs
-    ORDER BY Jobs.benefit_rating DESC
-    LIMIT 50;`, (err, data) => {
-      if (err || data.length === 0) {
-        console.log(err);
-        res.json([]);
-      } else {
-        res.json(data);
-      }
-    })
-  }
-  else {
-    // Reimplement with pagination
-    const offSet = (pageNum - 1) * pageSizeNum;
-    connection.query(`
-    SELECT Top_Jobs.uid as job_uid, Top_Jobs.job_title as job_title, Top_Jobs.category as category, Top_Jobs.benefit_rating as benefit_rating,
-    Top_Jobs.city as job_city, Top_Jobs.country as country, Top_Jobs.description as description, Top_Jobs.employer_name as employer_name,
-    Top_Jobs.reviews as reviews, Top_Jobs.discover_date as discover_date
-    FROM (SELECT *
-          FROM Jobs
-          ORDER BY Jobs.benefit_rating DESC
-          LIMIT 50) AS Top_Jobs
-    LIMIT ? OFFSET ?;`, [pageSizeNum, offSet], (err, data) => {
-      if (err || data.length === 0) {
-        console.log(err);
-        res.json([]);
-      } else {
-        res.json(data);
-      }
-    })
-  }
-}
-
 
 /***************************
  *  Glassdoor Jobs Page    *
