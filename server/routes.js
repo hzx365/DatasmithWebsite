@@ -74,13 +74,12 @@ const random = async function (req, res) {
 }
 
 /********************************
- * BASIC SONG/ALBUM INFO ROUTES *
+ * BASIC Job/Course INFO ROUTES *
  ********************************/
 
 // Route 3: GET /course/:course_id
 const course = async function (req, res) {
-  // TODO (TASK 4): implement a route that given a course_id, returns all information about the course
-
+  // implement a route that given a course_id, returns all information about the course
   // save the given course-id to variable requestID
   const requestID = req.params.course_id;
   connection.query(`
@@ -96,10 +95,10 @@ const course = async function (req, res) {
   });
 }
 
-// Route 4: GET /job/:job_id 
+// Route 4: GET /job/:job_uid 
 const job = async function (req, res) {
-  // TODO (TASK 5): implement a route that given a job_id, returns all information about the job
-  const requestID = req.params.job_id;
+  // implement a route that given a job_uid, returns all information about the job
+  const requestID = req.params.job_uid;
   connection.query(`
   SELECT * 
   FROM Jobs
@@ -112,38 +111,99 @@ const job = async function (req, res) {
     }
   });
 }
-// Route 5: GET /job/:job_id/courses 
+
+// Route 5: GET /job/:job_uid/courses 
 const job_courses = async function (req, res) {
-  // TODO (TASK 5): implement a route that given a job_id, returns the relavent courses
-  const requestID = req.params.job_id;
-  connection.query(`
-  SELECT * 
-  FROM Jobs_Courses
-  WHERE job_uid = ?`, [requestID], (err, data) => {
-    if (err || data.length === 0) {
-      console.log(err);
-      res.json({});
-    } else {
-      res.json(data);
-    }
-  });
+  // implement a route that given a job_uid, returns the relavent courses
+  const page = req.query.page;
+  //  use the ternary (or nullish) operator to set the pageSize based on the query or default to 10
+  const pageNum = page ?? parseInt(page);
+  const pageSizeNum = req.query.page_size ? parseInt(req.query.page_size) : 10;
+
+  const requestID = req.params.job_uid;
+  if (!page) {
+    connection.query(`
+    SELECT Jobs_Courses.course_id as course_id, Jobs_Courses.course_title as course_title, Jobs_Courses.language as language,
+    Jobs_Courses.avg_rating as avg_rating, Jobs_Courses.instructor_name as instructor_name, Jobs_Courses.num_comments as num_comments,
+    Jobs_Courses.num_reviews as num_reviews, Jobs_Courses.num_lectures as num_lectures, Jobs_Courses.content_length_min as content_length_min,
+    Jobs_Courses.num_subscribers as num_subscribers, Jobs_Courses.price as price, Jobs_Courses.published_time as published_time
+    FROM Jobs_Courses
+    WHERE job_uid = ?`, [requestID], (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data);
+      }
+    });
+  }
+  else {
+    // with pagination
+    // Hint: use LIMIT and OFFSET (see https://www.w3schools.com/php/php_mysql_select_limit.asp)
+    const offSet = (pageNum - 1) * pageSizeNum;
+    connection.query(`
+    SELECT Jobs_Courses.course_id as course_id, Jobs_Courses.course_title as course_title, Jobs_Courses.language as language,
+    Jobs_Courses.avg_rating as avg_rating, Jobs_Courses.instructor_name as instructor_name, Jobs_Courses.num_comments as num_comments,
+    Jobs_Courses.num_reviews as num_reviews, Jobs_Courses.num_lectures as num_lectures, Jobs_Courses.content_length_min as content_length_min,
+    Jobs_Courses.num_subscribers as num_subscribers, Jobs_Courses.price as price, Jobs_Courses.published_time as published_time
+    FROM Jobs_Courses
+    WHERE job_uid = ?
+    LIMIT ? OFFSET ?`, [requestID, pageSizeNum, offSet], (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data);
+      }
+    });
+  }
 }
+
 // Route 6: GET /course/:course_id/jobs
 const course_jobs = async function (req, res) {
   // TODO (TASK 7): implement a route that given an course_id, returns relavent jobs
+  const page = req.query.page;
+  //  use the ternary (or nullish) operator to set the pageSize based on the query or default to 10
+  const pageNum = page ?? parseInt(page);
+  const pageSizeNum = req.query.page_size ? parseInt(req.query.page_size) : 10;
+
   const requestID = req.params.course_id;
-  connection.query(`
-  SELECT *
-  FROM Courses_Jobs
-  WHERE course_id = ?
-  `, [requestID], (err, data) => {
-    if (err || data.length === 0) {
-      console.log(err);
-      res.json([]);
-    } else {
-      res.json(data); // replace this with your implementation
-    }
-  })
+
+
+  if (!page) {
+    connection.query(`
+    SELECT Courses_Jobs.job_uid as job_uid, Courses_Jobs.job_title as job_title, Courses_Jobs.benefit_rating as benefit_rating,
+    Courses_Jobs.city as city, Courses_Jobs.country as country, Courses_Jobs.description as description, Courses_Jobs.employer_name as employer_name,
+    Courses_Jobs.reviews as reviews, Courses_Jobs.discover_date as discover_date
+    FROM Courses_Jobs
+    WHERE course_id = ?
+    `, [requestID], (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data); // replace this with your implementation
+      }
+    })
+  }
+  else {
+    const offSet = (pageNum - 1) * pageSizeNum;
+    connection.query(`
+    SELECT Courses_Jobs.job_uid as job_uid, Courses_Jobs.job_title as job_title, Courses_Jobs.benefit_rating as benefit_rating,
+    Courses_Jobs.city as city, Courses_Jobs.country as country, Courses_Jobs.description as description, Courses_Jobs.employer_name as employer_name,
+    Courses_Jobs.reviews as reviews, Courses_Jobs.discover_date as discover_date
+    FROM Courses_Jobs
+    WHERE course_id = ?
+    LIMIT ? OFFSET ?`, [requestID, pageSizeNum, offSet], (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data); // replace this with your implementation
+      }
+    })
+  }
+
 }
 
 /************************
@@ -251,7 +311,6 @@ const search_jobs = async function (req, res) {
   const country = req.query.country;
   const category = req.query.category;
 
-
   // If title is undefined, no filter should be applied (return all songs matching the other conditions).
 
   connection.query(`
@@ -298,7 +357,43 @@ const search_courses = async function (req, res) {
     });
 }
 
+// Route 11: GET /job/:job_uid/reviews
+const job_reviews = async function (req, res) {
+  // return all reviews of a job given job_uid, when you click reviews hyperlink in job details page, you will be redirected to the page of this job's reviews
+  const requestID = req.params.job_uid;
+  connection.query(`
+  SELECT Jobs_Reviews.cons as cons, Jobs_Reviews.pros as pros, Jobs_Reviews.review_date as review_date
+  FROM Jobs_Reviews
+  WHERE Jobs_Reviews.job_uid = ?
+  ORDER BY Jobs_Reviews.review_date DESC;`,
+    [requestID], (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data);
+      }
+    });
+}
 
+// Route 12: GET /course/:course_id/comments
+const course_comments = async function (req, res) {
+  // return all comments of a course given course_id, when you click reviews hyperlink in job details page, you will be redirected to the page of this job's reviews
+  const requestID = req.params.course_id;
+  connection.query(`
+  SELECT Courses_Comments.comment as comments, Courses_Comments.rate as rates
+FROM Courses_Comments
+WHERE Courses_Comments.course_id = ?
+ORDER BY Courses_Comments.rate DESC;`,
+    [requestID], (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data);
+      }
+    });
+}
 
 module.exports = {
   author,
@@ -309,9 +404,10 @@ module.exports = {
   job, //@yuanmin
   job_courses, //@yuanmin
   search_jobs, //@yuanmin
+  job_reviews, //@yuanmin
 
   course,//@lulu
   course_jobs, //@lulu
   search_courses, //@lulu
-
+  course_comments //@yuanmin
 }

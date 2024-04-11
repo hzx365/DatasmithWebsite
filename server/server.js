@@ -23,15 +23,14 @@ app.get('/search_jobs', routes.search_jobs); //@yuanmin
 app.get('/search_courses', routes.search_courses); //@lulu
 
 // job details:
-app.get('/job/:job_id', routes.job); //@yuanmin
-app.get('/job/:job_id/courses', routes.job_courses); //@yuanmin
+app.get('/job/:job_uid', routes.job); //@yuanmin
+app.get('/job/:job_uid/courses', routes.job_courses); //@yuanmin
+app.get('/job/:job_uid/reviews', routes.job_reviews); //@yuanmin
 
 //course details:
 app.get('/course/:course_id', routes.course);//@lulu
 app.get('/course/:course_id/jobs', routes.course_jobs) //@lulu
-
-// app.get('/jobs', routes.albums);
-
+app.get('/course/:course_id/comments', routes.course_comments) //@yuanmin
 
 
 app.listen(config.server_port, () => {
