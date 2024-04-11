@@ -143,17 +143,21 @@ const top_jobs = async function (req, res) {
 const search_jobs = async function (req, res) {
   // TODO (TASK 12): return all jobs that match the given search query with parameters defaulted to those specified in API spec ordered by posted date (desc)
   // Some default parameters have been provided for you, but you will need to fill in the rest
+  const page = req.query.page;
+  // Use the ternary (or nullish) operator to set the pageSize based on the query or default to 10
+  const pageNum = page ?? parseInt(page);
+  const pageSizeNum = req.query.page_size ? parseInt(req.query.page_size) : 10;
 
   const city = req.query.city;
   const country = req.query.country;
   const category = req.query.category;
 
   // If title is undefined, no filter should be applied (return all songs matching the other conditions).
-
-  connection.query(`
+  if (!page) {
+    connection.query(`
     SELECT *
     FROM Jobs
-    WHERE Jobs.city = ? AND Jobs.country = ?AND Jobs.category = ?
+    WHERE Jobs.city = ? AND Jobs.country = ? AND Jobs.category = ?
     ORDER BY Jobs.discover_date DESC;`,
       [city, country, category],
       (err, data) => {
@@ -164,6 +168,26 @@ const search_jobs = async function (req, res) {
           res.json(data); // replace this with your implementation
         }
       });
+  }
+  else {
+    const offSet = (pageNum - 1) * pageSizeNum;
+    connection.query(`
+    SELECT *
+    FROM Jobs
+    WHERE Jobs.city = ? AND Jobs.country = ? AND Jobs.category = ?
+    ORDER BY Jobs.discover_date DESC
+    LIMIT ? OFFSET ?;`,
+      [city, country, category, pageSizeNum, offSet],
+      (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json([]);
+        } else {
+          res.json(data); // replace this with your implementation
+        }
+      });
+  }
+
 }
 
 /***************************
@@ -174,20 +198,22 @@ const search_jobs = async function (req, res) {
 const search_courses = async function (req, res) {
   // TODO (TASK 12): return all courses that match the given search query with parameters defaulted to those specified in API spec ordered by number of subscribers (desc)
   // Some default parameters have been provided for you, but you will need to fill in the rest
+  const page = req.query.page;
+  // Use the ternary (or nullish) operator to set the pageSize based on the query or default to 10
+  const pageNum = page ?? parseInt(page);
+  const pageSizeNum = req.query.page_size ? parseInt(req.query.page_size) : 10;
 
   const language = req.query.language;
-  const rating = req.query.rating;
+  const rating = parseFloat(req.query.rating);
   const category = req.query.category;
 
-
-  // If title is undefined, no filter should be applied (return all courses matching the other conditions).
-
-  connection.query(`
+  if (!page) {
+    connection.query(`
     SELECT *
     FROM Course_Info
     WHERE Course_Info.language = ? AND Course_Info.avg_rating = ? AND Course_Info.category = ?
     ORDER BY Course_Info.num_subscribers DESC;`,
-      [language, parseFloat(rating), category],
+      [language, rating, category],
       (err, data) => {
         if (err || data.length === 0) {
           console.log(err);
@@ -196,6 +222,26 @@ const search_courses = async function (req, res) {
           res.json(data); // replace this with your implementation
         }
       });
+  }
+  else {
+    const offSet = (pageNum - 1) * pageSizeNum;
+    connection.query(`
+    SELECT *
+    FROM Course_Info
+    WHERE Course_Info.language = ? AND Course_Info.avg_rating = ? AND Course_Info.category = ?
+    ORDER BY Course_Info.num_subscribers DESC
+    LIMIT ? OFFSET ?;`,
+      [language, rating, category, pageSizeNum, offSet],
+      (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json([]);
+        } else {
+          res.json(data); // replace this with your implementation
+        }
+      });
+  }
+
 }
 
 
@@ -276,14 +322,14 @@ const job_reviews = async function (req, res) {
   FROM Jobs_Reviews
   WHERE Jobs_Reviews.job_uid = ?
   ORDER BY Jobs_Reviews.review_date DESC;`,
-      [requestID], (err, data) => {
-        if (err || data.length === 0) {
-          console.log(err);
-          res.json([]);
-        } else {
-          res.json(data);
-        }
-      });
+    [requestID], (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data);
+      }
+    });
 }
 
 
