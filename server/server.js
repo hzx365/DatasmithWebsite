@@ -11,12 +11,10 @@ app.use(cors({
 // We use express to define our various API endpoints and
 // provide their handlers that we implemented in routes.js
 app.get('/author/:type', routes.author); // @yuanmin, lulu, 
-// app.get('/random', routes.random);
 
 //home page: 
-//app.get('/top_courses', routes.top_courses);
-//app.get('/top_jobs', routes.top_jobs);
-// app.get('/job_related_courses/:album_id', routes.album_songs);
+app.get('/top_courses', routes.top_courses);// @yarong
+app.get('/top_jobs', routes.top_jobs);// @yarong
 
 //glassdoor jobs page:
 app.get('/search_jobs', routes.search_jobs); //@yuanmin
@@ -30,7 +28,7 @@ app.get('/job/:job_id/courses', routes.job_courses); //@yuanmin
 
 //course details:
 app.get('/course/:course_id', routes.course);//@lulu
-app.get('/job/:course_id/jobs', routes.course_jobs) //@lulu
+app.get('/course/:course_id/jobs', routes.course_jobs) //@lulu
 
 // app.get('/jobs', routes.albums);
 

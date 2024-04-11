@@ -19,9 +19,9 @@ connection.connect((err) => err && console.log(err));
 
 // Route 1: GET /author/:type
 const author = async function (req, res) {
-  // TODO (TASK 1): replace the values of name and pennKey with your own
-  const name = 'Yuanmin Zhang, Lu Lu';
-  const pennKey = 'yuz249, lhlu';
+  // Replace the values of name and pennKey with your own
+  const name = 'Yuanmin Zhang, Lu Lu, Yarong Wang';
+  const pennKey = 'yuz249, lhlu, wangyar';
 
   // checks the value of type the request parameters
   // note that parameters are required and are specified in server.js in the endpoint by a colon (e.g. /author/:type)
@@ -124,7 +124,7 @@ const job_courses = async function (req, res) {
       console.log(err);
       res.json({});
     } else {
-      res.json(data[0]);
+      res.json(data);
     }
   });
 }
@@ -150,51 +150,54 @@ const course_jobs = async function (req, res) {
  * ADVANCED INFO ROUTES *
  ************************/
 
-// Route 7: GET /top_songs
-const top_songs = async function (req, res) {
+// Route 7: GET /top_jobs
+const top_jobs = async function (req, res) {
   const page = req.query.page;
-  // TODO (TASK 8): use the ternary (or nullish) operator to set the pageSize based on the query or default to 10
+  // Use the ternary (or nullish) operator to set the pageSize based on the query or default to 10
   const pageNum = page ?? parseInt(page);
   const pageSizeNum = req.query.page_size ? parseInt(req.query.page_size) : 10;
   if (!page) {
-    // TODO (TASK 9)): query the database and return all songs ordered by number of plays (descending)
-    // Hint: you will need to use a JOIN to get the album title as well
+    // Query the database and return top 50 jobs by benefit_rating (descending)
     connection.query(`
-    SELECT song_id, Songs.title, Albums.album_id, Albums.title AS album, Songs.plays FROM Songs
-INNER JOIN Albums on Songs.album_id = Albums.album_id
-ORDER by plays DESC;`, (err, data) => {
+    SELECT Jobs.uid as job_uid, Jobs.job_title as job_title, Jobs.category as category, Jobs.benefit_rating as benefit_rating,
+       Jobs.city as job_city, Jobs.country as country, Jobs.description as description, Jobs.employer_name as employer_name,
+       Jobs.reviews as reviews, Jobs.discover_date as discover_date
+    FROM Jobs
+    ORDER BY Jobs.benefit_rating DESC
+    LIMIT 50;`, (err, data) => {
       if (err || data.length === 0) {
         console.log(err);
         res.json([]);
       } else {
-        res.json(data); // replace this with your implementation
+        res.json(data);
       }
     })
   }
   else {
-    // TODO (TASK 10): reimplement TASK 9 with pagination
-    // Hint: use LIMIT and OFFSET (see https://www.w3schools.com/php/php_mysql_select_limit.asp)
+    // Reimplement with pagination
     const offSet = (pageNum - 1) * pageSizeNum;
     connection.query(`
-    SELECT song_id, Songs.title, Albums.album_id, Albums.title AS album, Songs.plays FROM Songs
-INNER JOIN Albums on Songs.album_id = Albums.album_id
-ORDER by plays DESC
-LIMIT ? OFFSET ?;`, [pageSizeNum, offSet], (err, data) => {
+    SELECT Top_Jobs.uid as job_uid, Top_Jobs.job_title as job_title, Top_Jobs.category as category, Top_Jobs.benefit_rating as benefit_rating,
+    Top_Jobs.city as job_city, Top_Jobs.country as country, Top_Jobs.description as description, Top_Jobs.employer_name as employer_name,
+    Top_Jobs.reviews as reviews, Top_Jobs.discover_date as discover_date
+    FROM (SELECT *
+          FROM Jobs
+          ORDER BY Jobs.benefit_rating DESC
+          LIMIT 50) AS Top_Jobs
+    LIMIT ? OFFSET ?;`, [pageSizeNum, offSet], (err, data) => {
       if (err || data.length === 0) {
         console.log(err);
         res.json([]);
       } else {
-        res.json(data); // replace this with your implementation
+        res.json(data);
       }
     })
   }
 }
 
-// Route 8: GET /top_albums
-const top_albums = async function (req, res) {
-  // TODO (TASK 11): return the top albums ordered by aggregate number of plays of all songs on the album (descending), with optional pagination (as in route 7)
-  // Hint: you will need to use a JOIN and aggregation to get the total plays of songs in an album
-
+// Route 8: GET /top_courses
+const top_courses = async function (req, res) {
+  // Return the top courses by avg_rating (descending)
   const page = req.query.page;
   // set the pageSize based on the query or default to 10
   const pageNum = page ?? parseInt(page);
@@ -202,31 +205,38 @@ const top_albums = async function (req, res) {
 
   if (!page) {
     connection.query(`
-    SELECT Albums.album_id, Albums.title AS title, SUM(Songs.plays) AS plays FROM Albums
-INNER JOIN Songs ON Albums.album_id = Songs.album_id
-GROUP BY Albums.album_id
-ORDER BY SUM(Songs.plays) DESC;`, (err, data) => {
+    SELECT Course_Info.id as course_id, Course_Info.title as title, Course_Info.category as category, Course_Info.language as language,
+       Course_Info.avg_rating as avg_rating, Course_Info.instructor_name as instructor_name, Course_Info.num_comments as num_comments,
+       Course_Info.num_reviews as num_reviews, Course_Info.num_lectures as num_lectures, Course_Info.content_length_min as content_length_min,
+       Course_Info.num_subscribers as num_subscribers, Course_Info.price as price, Course_Info.published_time as published_time
+    FROM Course_Info
+    ORDER BY Course_Info.avg_rating DESC
+    LIMIT 50;`, (err, data) => {
       if (err || data.length === 0) {
         console.log(err);
         res.json([]);
       } else {
-        res.json(data); // replace this with your implementation
+        res.json(data);
       }
     })
   }
   else {
     const offSet = (pageNum - 1) * pageSizeNum;
     connection.query(`
-    SELECT Albums.album_id, Albums.title AS title, SUM(Songs.plays) AS plays FROM Albums
-    INNER JOIN Songs ON Albums.album_id = Songs.album_id
-    GROUP BY Albums.album_id
-    ORDER BY SUM(Songs.plays) DESC   
-LIMIT ? OFFSET ?;`, [pageSizeNum, offSet], (err, data) => {
+    SELECT Top_Course_Info.id as course_id, Top_Course_Info.title as title, Top_Course_Info.category as category, Top_Course_Info.language as language,
+    Top_Course_Info.avg_rating as avg_rating, Top_Course_Info.instructor_name as instructor_name, Top_Course_Info.num_comments as num_comments,
+    Top_Course_Info.num_reviews as num_reviews, Top_Course_Info.num_lectures as num_lectures, Top_Course_Info.content_length_min as content_length_min,
+    Top_Course_Info.num_subscribers as num_subscribers, Top_Course_Info.price as price, Top_Course_Info.published_time as published_time
+    FROM (SELECT * 
+          FROM Course_Info
+          ORDER BY Course_Info.avg_rating DESC
+          LIMIT 50) AS Top_Course_Info 
+    LIMIT ? OFFSET ?;`, [pageSizeNum, offSet], (err, data) => {
       if (err || data.length === 0) {
         console.log(err);
         res.json([]);
       } else {
-        res.json(data); // replace this with your implementation
+        res.json(data);
       }
     })
   }
@@ -271,7 +281,7 @@ const search_courses = async function (req, res) {
 
 
   // If title is undefined, no filter should be applied (return all courses matching the other conditions).
-  
+
   connection.query(`
     SELECT *
     FROM Course_Info
@@ -291,12 +301,10 @@ const search_courses = async function (req, res) {
 
 
 module.exports = {
-  author, 
-  random,
+  author,
 
-
-  top_songs,
-  top_albums,
+  top_jobs,//@yarong
+  top_courses,//@yarong
 
   job, //@yuanmin
   job_courses, //@yuanmin
