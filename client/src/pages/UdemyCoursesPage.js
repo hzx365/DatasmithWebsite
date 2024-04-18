@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Button, Container, Grid, TextField } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { server_host, server_port } from '../config.json';
-
+import config from '../config.json';
+const { server_host, server_port } = config;
 
 export default function GlassdoorJobsPage() {
     const [data, setData] = useState([]);

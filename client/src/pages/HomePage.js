@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Container, Divider } from '@mui/material';
 import LazyTable from '../components/LazyTable';
-const config = require('../config.json');
+import config from '../config.json';
+const { server_host, server_port } = config;
 
 export default function HomePage() {
     // For demonstration, we are assuming that LazyTable takes a route and columns as props.

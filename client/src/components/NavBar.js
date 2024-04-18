@@ -33,7 +33,7 @@ export default function NavBar() {
         <AppBar position='static'>
             <Container maxWidth='xl'>
                 <Toolbar disableGutters>
-                    <NavText href='/' text='HOMEPAGE' isMain />
+                    <NavText href='/' text='JobEra' isMain />
                     <NavText href='/search_jobs' text='SEARCH JOBS' />
                     <NavText href='/search_courses' text='SEARCH COURSES' />
                     <NavText href='/job/:job_id' text='JOB DETAILS' />
