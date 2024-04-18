@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Button, Container, Grid, TextField } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Button, Container, Grid, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { server_host, server_port } from '../config.json';
 
@@ -10,6 +10,10 @@ export default function GlassdoorJobsPage() {
     const [country, setCountry] = useState('');
     const [category, setCategory] = useState('');
     const [page, setPage] = useState(1);
+
+    const cities = ['Any', 'New York', 'San Francisco', 'London', 'Berlin', 'Tokyo'];
+    const countries = ['Any', 'USA', 'UK', 'Germany', 'Japan'];
+    const categories = ['Any', 'Technology', 'Finance', 'Healthcare', 'Education'];
 
     useEffect(() => {
         fetchJobs();
@@ -44,28 +48,46 @@ export default function GlassdoorJobsPage() {
             <h2>Search Jobs</h2>
             <Grid container spacing={3}>
                 <Grid item xs={4}>
-                    <TextField
-                        label="City"
-                        value={city}
-                        onChange={(e) => setCity(e.target.value)}
-                        fullWidth
-                    />
+                    <FormControl fullWidth>
+                        <InputLabel>City</InputLabel>
+                        <Select
+                            value={city}
+                            label="City"
+                            onChange={(e) => setCity(e.target.value)}
+                        >
+                            {cities.map((city) => (
+                                <MenuItem key={city} value={city}>{city}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                 </Grid>
                 <Grid item xs={4}>
-                    <TextField
-                        label="Country"
-                        value={country}
-                        onChange={(e) => setCountry(e.target.value)}
-                        fullWidth
-                    />
+                    <FormControl fullWidth>
+                        <InputLabel>Country</InputLabel>
+                        <Select
+                            value={country}
+                            label="Country"
+                            onChange={(e) => setCountry(e.target.value)}
+                        >
+                            {countries.map((country) => (
+                                <MenuItem key={country} value={country}>{country}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                 </Grid>
                 <Grid item xs={4}>
-                    <TextField
-                        label="Category"
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                        fullWidth
-                    />
+                    <FormControl fullWidth>
+                        <InputLabel>Category</InputLabel>
+                        <Select
+                            value={category}
+                            label="Category"
+                            onChange={(e) => setCategory(e.target.value)}
+                        >
+                            {categories.map((category) => (
+                                <MenuItem key={category} value={category}>{category}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                 </Grid>
             </Grid>
             <Button
@@ -82,7 +104,6 @@ export default function GlassdoorJobsPage() {
                 columns={columns}
                 pageSize={pageSize}
                 rowsPerPageOptions={[5, 10, 25]}
-                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                 paginationMode="server"
                 onPageChange={(newPage) => setPage(newPage + 1)}
                 rowCount={100} // You may need to dynamically adjust this if your API supports total count.

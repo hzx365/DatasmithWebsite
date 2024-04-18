@@ -1,46 +1,45 @@
 import { AppBar, Container, Toolbar, Typography } from '@mui/material'
 import { NavLink } from 'react-router-dom';
 
-// The hyperlinks in the NavBar contain a lot of repeated formatting code so a
-// helper component NavText local to the file is defined to prevent repeated code.
+// Helper component to avoid repeated code for navigation links
 function NavText({ href, text, isMain }) {
-  return (
-    <Typography
-      variant={isMain ? 'h5' : 'h7'}
-      noWrap
-      style={{
-        marginRight: '30px',
-        fontFamily: 'monospace',
-        fontWeight: 700,
-        letterSpacing: '.3rem',
-      }}
-    >
-      <NavLink
-        to={href}
-        style={{
-          color: 'inherit',
-          textDecoration: 'none',
-        }}
-      >
-        {text}
-      </NavLink>
-    </Typography>
-  )
+    return (
+        <Typography
+            variant={isMain ? 'h5' : 'h6'}  // Corrected to 'h6' as 'h7' is not a valid variant
+            Wrap
+            style={{
+                marginRight: '30px',
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                letterSpacing: '.3rem',
+            }}
+        >
+            <NavLink
+                to={href}
+                style={{
+                    color: 'inherit',
+                    textDecoration: 'none',
+                }}
+            >
+                {text}
+            </NavLink>
+        </Typography>
+    )
 }
 
-// Here, we define the NavBar. Note that we heavily leverage MUI components
-// to make the component look nice. Feel free to try changing the formatting
-// props to how it changes the look of the component.
+// NavBar component using Material UI (MUI) components
 export default function NavBar() {
-  return (
-    <AppBar position='static'>
-      <Container maxWidth='xl'>
-        <Toolbar disableGutters>
-          <NavText href='/' text='SWIFTIFY' isMain />
-          <NavText href='/albums' text='ALBUMS' />
-          <NavText href='/songs' text='SONGS' />
-        </Toolbar>
-      </Container>
-    </AppBar>
-  );
+    return (
+        <AppBar position='static'>
+            <Container maxWidth='xl'>
+                <Toolbar disableGutters>
+                    <NavText href='/' text='HOMEPAGE' isMain />
+                    <NavText href='/search_jobs' text='SEARCH JOBS' />
+                    <NavText href='/search_courses' text='SEARCH COURSES' />
+                    <NavText href='/job/:job_id' text='JOB DETAILS' />
+                    <NavText href='/course/:course_id' text='COURSE DETAILS' />
+                </Toolbar>
+            </Container>
+        </AppBar>
+    );
 }
