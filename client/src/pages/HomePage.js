@@ -16,7 +16,7 @@ export default function HomePage() {
             headerName: 'Job Title',
             width: 200,
             renderCell: (row) => (
-                <Link href={`/job_details/${row.job_uid}`}>{row.job_title}</Link>
+                <Link href={`/job/${row.job_uid}`}>{row.job_title}</Link>
             ),
         },
         //{ field: 'job_title', headerName: 'Job Title', width: 200 },
@@ -34,7 +34,7 @@ export default function HomePage() {
             headerName: 'Course Title',
             width: 200,
             renderCell: (row) => (
-                <Link href={`/course_details/${row.course_id}`}>{row.title}</Link>
+                <Link href={`/course/${row.course_id}`}>{row.title}</Link>
             ),
         },
         //{ field: 'title', headerName: 'Course Title', width: 200 },
