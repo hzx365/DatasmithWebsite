@@ -34,7 +34,7 @@ export default function HomePage() {
             headerName: 'Course Title',
             width: 200,
             renderCell: (row) => (
-                <Link href={`/course_details/${row.course_uid}`}>{row.title}</Link>
+                <Link href={`/course_details/${row.course_id}`}>{row.title}</Link>
             ),
         },
         //{ field: 'title', headerName: 'Course Title', width: 200 },
