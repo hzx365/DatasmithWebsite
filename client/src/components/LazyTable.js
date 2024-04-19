@@ -11,7 +11,6 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination
 // required will affect how you handle them in the code.
 export default function LazyTable({ route, columns, defaultPageSize, rowsPerPageOptions }) {
   const [data, setData] = useState([]);
-
   const [page, setPage] = useState(1); // 1 indexed
   const [pageSize, setPageSize] = useState(defaultPageSize ?? 10);
 
@@ -48,37 +47,35 @@ export default function LazyTable({ route, columns, defaultPageSize, rowsPerPage
   }
 
   return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            {columns.map(col => <TableCell key={col.headerName}>{col.headerName}</TableCell>)}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data.map((row, idx) =>
-            <TableRow key={idx}>
-              {
-                // TODO (TASK 19): the next 3 lines of code render only the first column. Wrap this with another map statement to render all columns.
-                // Hint: look at how we structured the map statement to render all the table headings within the <TableHead> element
-                // <TableCell key={columns[0].headerName}>
-                //   {/* Note the following ternary statement renders the cell using a custom renderCell function if defined, or defaultRenderCell otherwise */}
-                //   {columns[0].renderCell ? columns[0].renderCell(row) : defaultRenderCell(columns[0], row)}
-                // </TableCell>
-                columns.map(col => <TableCell key={col.headerName}>{col.renderCell ? col.renderCell(row) : defaultRenderCell(col, row)}</TableCell>)
-              }
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {columns.map(col => <TableCell key={col.headerName}>{col.headerName}</TableCell>)}
             </TableRow>
-          )}
-        </TableBody>
-        <TablePagination
-          rowsPerPageOptions={rowsPerPageOptions ?? [5, 10, 25]}
-          count={-1}
-          rowsPerPage={pageSize}
-          page={page - 1}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangePageSize}
-        />
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {data.map((row, idx) => (
+                <TableRow key={idx}>
+                  {columns.map((col, colIdx) => (
+                      <TableCell key={col.headerName}>
+                        {colIdx === 0 && col.renderCell
+                            ? col.renderCell(row)
+                            : defaultRenderCell(col, row)}
+                      </TableCell>
+                  ))}
+                </TableRow>
+            ))}
+          </TableBody>
+          <TablePagination
+              rowsPerPageOptions={rowsPerPageOptions ?? [5, 10, 25]}
+              count={-1}
+              rowsPerPage={pageSize}
+              page={page - 1}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangePageSize}
+          />
+        </Table>
+      </TableContainer>
   )
 }

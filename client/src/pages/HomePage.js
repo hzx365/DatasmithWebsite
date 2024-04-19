@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Divider } from '@mui/material';
+import { Container, Divider, Link } from '@mui/material';
 import LazyTable from '../components/LazyTable';
 import config from '../config.json';
 const { server_host, server_port } = config;
@@ -10,7 +10,16 @@ export default function HomePage() {
     // as suggested by its name suggesting it loads data "lazily" (i.e., as needed).
 
     const jobColumns = [
-        { field: 'job_title', headerName: 'Job Title', width: 200 },
+        //{ field: 'job_uid', headerName: 'Job UID', width: 200 },
+        {
+            field: 'job_title',
+            headerName: 'Job Title',
+            width: 200,
+            renderCell: (row) => (
+                <Link href={`/job_details/${row.job_uid}`}>{row.job_title}</Link>
+            ),
+        },
+        //{ field: 'job_title', headerName: 'Job Title', width: 200 },
         { field: 'employer_name', headerName: 'Employer', width: 200 },
         { field: 'category', headerName: 'Category', width: 130 },
         { field: 'city', headerName: 'City', width: 130 },
@@ -20,7 +29,15 @@ export default function HomePage() {
     ];
 
     const courseColumns = [
-        { field: 'title', headerName: 'Course Title', width: 200 },
+        {
+            field: 'title',
+            headerName: 'Course Title',
+            width: 200,
+            renderCell: (row) => (
+                <Link href={`/course_details/${row.course_uid}`}>{row.title}</Link>
+            ),
+        },
+        //{ field: 'title', headerName: 'Course Title', width: 200 },
         { field: 'instructor_name', headerName: 'Instructor', width: 200 },
         { field: 'category', headerName: 'Category', width: 130 },
         { field: 'language', headerName: 'Language', width: 130 },
