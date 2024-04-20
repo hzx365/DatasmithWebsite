@@ -32,7 +32,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/search_jobs" element={<GlassdoorJobsPage />} />
-          <Route path="/job/:job_id" element={<JobDetailsPage />} />
+          <Route path="/job/:job_uid" element={<JobDetailsPage />} />
           <Route path="/search_courses" element={<UdemyCoursesPage />} />
           <Route path="/course/:course_id" element={<CourseDetailsPage />} />
         </Routes>

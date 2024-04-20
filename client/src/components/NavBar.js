@@ -6,7 +6,6 @@ function NavText({ href, text, isMain }) {
     return (
         <Typography
             variant={isMain ? 'h5' : 'h6'}  // Corrected to 'h6' as 'h7' is not a valid variant
-            Wrap
             style={{
                 marginRight: '30px',
                 fontFamily: 'monospace',

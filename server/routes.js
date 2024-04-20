@@ -258,9 +258,9 @@ const job = async function (req, res) {
   WHERE uid = ?`, [requestID], (err, data) => {
     if (err || data.length === 0) {
       console.log(err);
-      res.json({});
+      res.json([]);
     } else {
-      res.json(data[0]);
+      res.json(data);
     }
   });
 }

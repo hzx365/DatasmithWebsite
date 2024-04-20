@@ -9,10 +9,10 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination
 // passed into the component. Some of these props are optional (defaultPageSize, rowsPerPageOptions) while
 // others are required (routes, columns). Though not indicated by code, whether the props are optional or
 // required will affect how you handle them in the code.
-export default function LazyTable({ route, columns, defaultPageSize, rowsPerPageOptions }) {
+export default function LazyTable({ route, columns, defaultPageSize, rowsPerPageOptions}) {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1); // 1 indexed
-  const [pageSize, setPageSize] = useState(defaultPageSize ?? 10);
+  const [pageSize, setPageSize] = useState(defaultPageSize ?? 5);
 
   // Now notice the dependency array contains route, page, pageSize, since we
   // need to re-fetch the data if any of these values change
@@ -67,15 +67,15 @@ export default function LazyTable({ route, columns, defaultPageSize, rowsPerPage
                 </TableRow>
             ))}
           </TableBody>
-          <TablePagination
-              rowsPerPageOptions={rowsPerPageOptions ?? [5, 10, 25]}
-              count={-1}
-              rowsPerPage={pageSize}
-              page={page - 1}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangePageSize}
-          />
         </Table>
+        <TablePagination
+            rowsPerPageOptions={rowsPerPageOptions ?? [5, 10, 25]}
+            count={-1}
+            rowsPerPage={pageSize}
+            page={page - 1}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangePageSize}
+        />
       </TableContainer>
-  )
+  );
 }
