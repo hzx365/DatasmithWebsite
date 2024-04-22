@@ -7,7 +7,7 @@ import NavBar from './components/NavBar';
 import HomePage from './pages/HomePage';
 import GlassdoorJobsPage from './pages/GlassdoorJobsPage';
 import UdemyCoursesPage from './pages/UdemyCoursesPage';
-import JobDetailsPage from './pages/JobDetailsPage'
+import JobDetailsPage from './pages/JobDetailsPage';
 import CourseDetailsPage from './pages/CourseDetailsPage'
 
 // createTheme enables you to customize the look and feel of your app past the default

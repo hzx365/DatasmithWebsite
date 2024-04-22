@@ -316,19 +316,44 @@ const job_courses = async function (req, res) {
 const job_reviews = async function (req, res) {
   // return all reviews of a job given job_uid, when you click reviews hyperlink in job details page, you will be redirected to the page of this job's reviews
   const requestID = req.params.job_uid;
-  connection.query(`
-  SELECT Jobs_Reviews.cons as cons, Jobs_Reviews.pros as pros, Jobs_Reviews.review_date as review_date
-  FROM Jobs_Reviews
-  WHERE Jobs_Reviews.job_uid = ?
-  ORDER BY Jobs_Reviews.review_date DESC;`,
-    [requestID], (err, data) => {
-      if (err || data.length === 0) {
-        console.log(err);
-        res.json([]);
-      } else {
-        res.json(data);
-      }
-    });
+  const page = req.query.page;
+  //  use the ternary (or nullish) operator to set the pageSize based on the query or default to 10
+  const pageNum = page ?? parseInt(page);
+  const pageSizeNum = req.query.page_size ? parseInt(req.query.page_size) : 10;
+
+  if (!page) {
+    connection.query(`
+    SELECT Jobs_Reviews.cons as cons, Jobs_Reviews.pros as pros, Jobs_Reviews.review_date as review_date
+    FROM Jobs_Reviews
+    WHERE Jobs_Reviews.job_uid = ?
+    ORDER BY Jobs_Reviews.review_date DESC`,
+      [requestID], (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json([]);
+        } else {
+          res.json(data);
+        }
+      });
+  }
+  else {
+    const offSet = (pageNum - 1) * pageSizeNum;
+    connection.query(`
+    SELECT Jobs_Reviews.cons as cons, Jobs_Reviews.pros as pros, Jobs_Reviews.review_date as review_date
+    FROM Jobs_Reviews
+    WHERE Jobs_Reviews.job_uid = ?
+    ORDER BY Jobs_Reviews.review_date DESC
+    LIMIT ? OFFSET ?`,
+      [requestID, pageSizeNum, offSet], (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json([]);
+        } else {
+          res.json(data);
+        }
+      });
+  }
+
 }
 
 
