@@ -189,6 +189,51 @@ const search_jobs = async function (req, res) {
 
 }
 
+const search_jobs_categories = async function (req, res) {
+  connection.query(`
+  SELECT category
+  FROM Category
+  ORDER BY category ASC;`,
+    (err, data) => {
+      if (err) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data.map(d => d.category));
+      }
+    });
+};
+
+const search_jobs_cities = async (req, res) => {
+  connection.query(`
+  SELECT DISTINCT city
+  FROM Jobs
+  ORDER BY city ASC;`,
+    (err, data) => {
+      if (err) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data.map(d => d.city));
+      }
+    });
+};
+
+const search_jobs_countries = async (req, res) => {
+  connection.query(`
+  SELECT DISTINCT country
+  FROM Jobs
+  ORDER BY country ASC;`,
+    (err, data) => {
+      if (err) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data.map(d => d.country));
+      }
+    });
+};
+
 /***************************
  *   Udemy Courses Page    *
  **************************/
@@ -480,6 +525,9 @@ module.exports = {
   job, //@yuanmin
   job_courses, //@yuanmin
   search_jobs, //@yuanmin
+  search_jobs_categories, //@yuanmin
+  search_jobs_cities, //@yuanmin
+  search_jobs_countries, //@yuanmin
   job_reviews, //@yuanmin
 
   course,//@lulu

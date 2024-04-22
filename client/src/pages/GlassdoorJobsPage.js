@@ -12,18 +12,33 @@ export default function GlassdoorJobsPage() {
     const [category, setCategory] = useState('');
     const [page, setPage] = useState(1);
 
-    const cities = ['Any', 'New York', 'San Francisco', 'London', 'Berlin', 'Tokyo'];
-    const countries = ['Any', 'USA', 'UK', 'Germany', 'Japan'];
-    const categories = ['Any', 'Technology', 'Finance', 'Healthcare', 'Education'];
+    const [categories, setCategories] = useState([]);
+    const [cities, setCities] = useState([]);
+    const [countries, setCountries] = useState([]);
 
     useEffect(() => {
-        fetchJobs();
-    }, [page]);
-
-    const fetchJobs = () => {
-        fetch(`http://${server_host}:${server_port}/search_jobs?city=${city}&country=${country}&category=${category}&page=${page}&page_size=${pageSize}`)
+        fetch(`http://${server_host}:${server_port}/search_jobs/categories`)
             .then(res => res.json())
             .then(resJson => {
+                setCategories(resJson);
+            });
+        fetch(`http://${server_host}:${server_port}/search_jobs/cities`)
+            .then(res => res.json())
+            .then(resJson => {
+                setCities(resJson);
+            });
+        fetch(`http://${server_host}:${server_port}/search_jobs/countries`)
+            .then(res => res.json())
+            .then(resJson => {
+                setCountries(resJson);
+            });
+    }, []);
+
+    const fetchJobs = () => {
+        fetch(`http://${server_host}:${server_port}/search_jobs?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&category=${encodeURIComponent(category)}&page=${page}&page_size=${pageSize}`)
+            .then(res => res.json())
+            .then(resJson => {
+                resJson.map(d => d.id = d.uid);
                 setData(resJson);
             })
             .catch(error => console.error('Error fetching jobs:', error));
@@ -36,8 +51,8 @@ export default function GlassdoorJobsPage() {
 
     const columns = [
         { field: 'job_id', headerName: 'Job ID', width: 100 },
-        { field: 'title', headerName: 'Title', width: 200 },
-        { field: 'company', headerName: 'Company', width: 200 },
+        { field: 'job_title', headerName: 'Title', width: 200 },
+        { field: 'employer_name', headerName: 'Company', width: 200 },
         { field: 'city', headerName: 'City', width: 150 },
         { field: 'country', headerName: 'Country', width: 150 },
         { field: 'category', headerName: 'Category', width: 150 },
@@ -107,6 +122,7 @@ export default function GlassdoorJobsPage() {
                 rowsPerPageOptions={[5, 10, 25]}
                 paginationMode="server"
                 onPageChange={(newPage) => setPage(newPage + 1)}
+                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                 rowCount={100} // You may need to dynamically adjust this if your API supports total count.
                 autoHeight
             />
