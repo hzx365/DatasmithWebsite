@@ -431,19 +431,43 @@ const course_jobs = async function (req, res) {
 const course_comments = async function (req, res) {
   // return all comments of a course given course_id, when you click reviews hyperlink in job details page, you will be redirected to the page of this job's reviews
   const requestID = req.params.course_id;
-  connection.query(`
+  const page = req.query.page;
+  //  use the ternary (or nullish) operator to set the pageSize based on the query or default to 10
+  const pageNum = page ?? parseInt(page);
+  const pageSizeNum = req.query.page_size ? parseInt(req.query.page_size) : 10;
+  if (!page) {
+    connection.query(`
   SELECT Courses_Comments.comment as comments, Courses_Comments.rate as rates
-FROM Courses_Comments
-WHERE Courses_Comments.course_id = ?
-ORDER BY Courses_Comments.rate DESC;`,
-    [requestID], (err, data) => {
-      if (err || data.length === 0) {
-        console.log(err);
-        res.json([]);
-      } else {
-        res.json(data);
-      }
-    });
+  FROM Courses_Comments
+  WHERE Courses_Comments.course_id = ?
+  ORDER BY Courses_Comments.rate DESC`,
+      [requestID], (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json([]);
+        } else {
+          res.json(data);
+        }
+      });
+  }
+  else {
+    const offSet = (pageNum - 1) * pageSizeNum;
+    connection.query(`
+  SELECT Courses_Comments.comment as comments, Courses_Comments.rate as rates
+  FROM Courses_Comments
+  WHERE Courses_Comments.course_id = ?
+  ORDER BY Courses_Comments.rate DESC
+  LIMIT ? OFFSET ?`,
+      [requestID, pageSizeNum, offSet], (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json([]);
+        } else {
+          res.json(data);
+        }
+      });
+  }
+
 }
 
 
