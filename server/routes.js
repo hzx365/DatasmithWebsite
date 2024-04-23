@@ -204,6 +204,36 @@ const search_jobs_categories = async function (req, res) {
     });
 };
 
+const search_category_given_country_city = async function (req, res) {
+  const { country, city } = req.query;
+  let query = `
+        SELECT DISTINCT category
+        FROM Jobs  -- Assuming categories are stored in the Jobs table and there's a relation or proper columns for it.
+        WHERE 1=1`;
+
+  const params = [];
+
+  if (country) {
+    query += ` AND country = ?`;
+    params.push(country);
+  }
+  if (city) {
+    query += ` AND city = ?`;
+    params.push(city);
+  }
+
+  query += ` ORDER BY category ASC;`;
+
+  connection.query(query, params, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json([]);
+    } else {
+      res.json(data.map(d => d.category));
+    }
+  });
+};
+
 const search_jobs_cities = async (req, res) => {
   connection.query(`
   SELECT DISTINCT city
@@ -219,6 +249,42 @@ const search_jobs_cities = async (req, res) => {
     });
 };
 
+const search_city_given_country = async (req, res) => {
+  const country = req.query.country;
+
+  if (!country) {
+    // Fetch and return all countries if no country parameter is provided
+    connection.query(`
+      SELECT DISTINCT country
+      FROM Jobs
+      ORDER BY country ASC;`,
+        (err, data) => {
+          if (err) {
+            console.log(err);
+            res.status(500).json([]);
+          } else {
+            res.json(data.map(d => d.country));
+          }
+        });
+  } else {
+    // Fetch and return cities for the given country
+    connection.query(`
+      SELECT DISTINCT city
+      FROM Jobs
+      WHERE country = ?
+      ORDER BY city ASC;`,
+        [country], // Use the country from the request to filter the SQL query
+        (err, data) => {
+          if (err) {
+            console.log(err);
+            res.status(500).json([]);
+          } else {
+            res.json(data.map(d => d.city));
+          }
+        });
+  }
+}
+
 const search_jobs_countries = async (req, res) => {
   connection.query(`
   SELECT DISTINCT country
@@ -233,6 +299,8 @@ const search_jobs_countries = async (req, res) => {
       }
     });
 };
+
+
 
 /***************************
  *   Udemy Courses Page    *
@@ -609,6 +677,8 @@ module.exports = {
   search_jobs_categories, //@yuanmin
   search_jobs_cities, //@yuanmin
   search_jobs_countries, //@yuanmin
+  search_city_given_country, //@ Zhixiang
+  search_category_given_country_city, // @ Zhixiang
   job_reviews, //@yuanmin
 
   course,//@lulu
@@ -618,6 +688,6 @@ module.exports = {
   search_courses_languages, //@lulu
   course_comments, //@yuanmin
 
-  get_random_job, //Zhixiang
-  get_random_course, // Zhixiang
+  get_random_job, //@Zhixiang
+  get_random_course, // @Zhixiang
 }

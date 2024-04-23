@@ -18,8 +18,10 @@ app.get('/top_courses', routes.top_courses);// (3) @yarong
 
 // glassdoor jobs page:
 app.get('/search_jobs', routes.search_jobs); // (4) @yuanmin
-app.get('/search_jobs/categories', routes.search_jobs_categories); // (4.1) @yuanmin
-app.get('/search_jobs/cities', routes.search_jobs_cities); // (4.2) @yuanmin
+//app.get('/search_jobs/categories', routes.search_jobs_categories); // (4.1) @yuanmin
+app.get('/search_jobs/categories', routes.search_category_given_country_city);
+//app.get('/search_jobs/cities', routes.search_jobs_cities); // (4.2) @yuanmin
+app.get('/search_jobs/cities', routes.search_city_given_country); // @Zhixiang
 app.get('/search_jobs/countries', routes.search_jobs_countries); // (4.3) @yuanmin
 
 // course page:
@@ -31,6 +33,7 @@ app.get('/search_courses/languages', routes.search_courses_languages); //(5.2) @
 app.get('/job/:job_uid', routes.job); // (6) @yuanmin
 app.get('/job/:job_uid/courses', routes.job_courses); // (7) @yuanmin
 app.get('/job/:job_uid/reviews', routes.job_reviews); // (8) @yuanmin
+
 
 // course details:
 app.get('/course/:course_id', routes.course);// (9) @lulu

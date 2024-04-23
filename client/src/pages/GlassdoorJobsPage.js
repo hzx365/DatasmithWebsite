@@ -17,22 +17,31 @@ export default function GlassdoorJobsPage() {
     const [countries, setCountries] = useState([]);
 
     useEffect(() => {
-        fetch(`http://${server_host}:${server_port}/search_jobs/categories`)
-            .then(res => res.json())
-            .then(resJson => {
-                setCategories(resJson);
-            });
-        fetch(`http://${server_host}:${server_port}/search_jobs/cities`)
-            .then(res => res.json())
-            .then(resJson => {
-                setCities(resJson);
-            });
         fetch(`http://${server_host}:${server_port}/search_jobs/countries`)
             .then(res => res.json())
-            .then(resJson => {
-                setCountries(resJson);
-            });
+            .then(setCountries);
     }, []);
+
+    useEffect(() => {
+        if (country) {
+            fetch(`http://${server_host}:${server_port}/search_jobs/cities?country=${encodeURIComponent(country)}`)
+                .then(res => res.json())
+                .then(setCities);
+        } else {
+            setCities([]);
+        }
+    }, [country]);
+
+    useEffect(() => {
+        if (country || city) {
+            fetch(`http://${server_host}:${server_port}/search_jobs/categories?country=${encodeURIComponent(country)}&city=${encodeURIComponent(city)}`)
+                .then(res => res.json())
+                .then(setCategories)
+                .catch(error => console.error('Error fetching categories:', error));
+        } else {
+            setCategories([]); // Optionally clear categories when neither country nor city is selected
+        }
+    }, [country, city]);
 
     const fetchJobs = () => {
         fetch(`http://${server_host}:${server_port}/search_jobs?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&category=${encodeURIComponent(category)}&page=${page}&page_size=${pageSize}`)
@@ -43,6 +52,7 @@ export default function GlassdoorJobsPage() {
             })
             .catch(error => console.error('Error fetching jobs:', error));
     };
+
 
     const handleSearch = () => {
         setPage(1);
@@ -82,28 +92,32 @@ export default function GlassdoorJobsPage() {
             <Grid container spacing={3}>
                 <Grid item xs={4} style={gridItemStyle}>
                     <FormControl fullWidth>
-                        <InputLabel>City</InputLabel>
+                        <InputLabel>Country</InputLabel>
                         <Select
-                            value={city}
-                            label="City"
-                            onChange={(e) => setCity(e.target.value)}
+                            value={country}
+                            label="Country"
+                            onChange={(e) => {
+                                setCountry(e.target.value);
+                                setCity(''); // Reset city selection when country changes
+                            }}
                         >
-                            {cities.map((city) => (
-                                <MenuItem key={city} value={city}>{city}</MenuItem>
+                            {countries.map((country) => (
+                                <MenuItem key={country} value={country}>{country}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>
                 </Grid>
                 <Grid item xs={4} style={gridItemStyle}>
                     <FormControl fullWidth>
-                        <InputLabel>Country</InputLabel>
+                        <InputLabel>City</InputLabel>
                         <Select
-                            value={country}
-                            label="Country"
-                            onChange={(e) => setCountry(e.target.value)}
+                            value={city}
+                            label="City"
+                            onChange={(e) => setCity(e.target.value)}
+                            disabled={!country} // Disable until a country is selected
                         >
-                            {countries.map((country) => (
-                                <MenuItem key={country} value={country}>{country}</MenuItem>
+                            {cities.map((city) => (
+                                <MenuItem key={city} value={city}>{city}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>
