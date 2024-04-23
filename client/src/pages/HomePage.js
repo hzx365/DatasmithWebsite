@@ -20,7 +20,7 @@ export default function HomePage() {
         },
         { field: 'employer_name', headerName: 'Employer', width: 200 },
         { field: 'category', headerName: 'Category', width: 130 },
-        { field: 'city', headerName: 'City', width: 130 },
+        { field: 'job_city', headerName: 'City', width: 130 },
         { field: 'country', headerName: 'Country', width: 130 },
         { field: 'benefit_rating', headerName: 'Benefit Rating', width: 130, type: 'number' },
         { field: 'description', headerName: 'Description', width: 300 }
