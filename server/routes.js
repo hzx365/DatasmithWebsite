@@ -616,7 +616,7 @@ module.exports = {
   search_courses, //@lulu
   search_courses_categories, //@lulu
   search_courses_languages, //@lulu
-  course_comments //@yuanmin
+  course_comments, //@yuanmin
 
   get_random_job, //Zhixiang
   get_random_course, // Zhixiang
