@@ -548,6 +548,54 @@ const course_comments = async function (req, res) {
 
 }
 
+/***************************
+ *   Random id in NavBar   *
+ **************************/
+// Route 12: GET /job/random_job_uid
+const get_random_job = async function(req, res) {
+  connection.query(`
+    SELECT uid AS job_uid
+    FROM Jobs
+    ORDER BY RAND()
+    LIMIT 1;`,
+      (err, data) => {
+        if (err) {
+          console.log(err);
+          res.status(500).json({ message: "Error retrieving random job UID", error: err });
+        } else {
+          // Assuming data is an array of rows and we're selecting one row
+          if (data.length > 0) {
+            res.json({ job_uid: data[0].job_uid });
+          } else {
+            res.status(404).json({ message: "No jobs found" });
+          }
+        }
+      });
+};
+
+// Route 13: GET /course/random_course_id
+const get_random_course = async function(req, res) {
+  connection.query(`
+    SELECT id AS course_id
+    FROM Course_Info
+    ORDER BY RAND()
+    LIMIT 1;`,
+      (err, data) => {
+        if (err) {
+          console.log(err);
+          res.status(500).json({ message: "Error retrieving random course ID", error: err });
+        } else {
+          // Assuming data is an array of rows and we're selecting one row
+          if (data.length > 0) {
+            res.json({ course_id: data[0].course_id });
+          } else {
+            res.status(404).json({ message: "No courses found" });
+          }
+        }
+      });
+};
+
+
 
 module.exports = {
   author,
@@ -569,4 +617,7 @@ module.exports = {
   search_courses_categories, //@lulu
   search_courses_languages, //@lulu
   course_comments //@yuanmin
+
+  get_random_job, //Zhixiang
+  get_random_course, // Zhixiang
 }
