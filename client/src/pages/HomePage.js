@@ -9,7 +9,7 @@ export default function HomePage() {
     // as suggested by its name suggesting it loads data "lazily" (i.e., as needed).
 
     const jobColumns = [
-        //{ field: 'job_uid', headerName: 'Job UID', width: 200 },
+        // { field: 'job_uid', headerName: 'Job UID', width: 200 },
         {
             field: 'job_title',
             headerName: 'Job Title',
@@ -27,6 +27,8 @@ export default function HomePage() {
     ];
 
     const courseColumns = [
+        // { field: 'course_id', headerName: 'Course ID', width: 200 },
+
         {
             field: 'title',
             headerName: 'Course Title',
