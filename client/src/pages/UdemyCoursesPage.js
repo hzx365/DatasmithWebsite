@@ -8,15 +8,12 @@ const { server_host, server_port } = config;
 export default function GlassdoorJobsPage() {
     const [data, setData] = useState([]);
     const [pageSize, setPageSize] = useState(10);
-    // const [city, setCity] = useState('');
     const [language, setLanguage] = useState('English');
-    // const [country, setCountry] = useState('');
     const [rating, setRating] = useState(5);
     const [category, setCategory] = useState('IT & Software');
     const [page, setPage] = useState(1);
     const [price, setPrice] = useState(99);
 
-    // const languages = ["Any", "English", "Portuguese", "Spanish", "Turkish", "Japnese"]
     const [categories, setCategories] = useState([]);
     const [languages, setLanguages] = useState([]);
 
@@ -62,10 +59,8 @@ export default function GlassdoorJobsPage() {
                 <Link href={`/course/${params.id}`}>{params.value}</Link>
             )
         },
-        // { field: 'company', headerName: 'Company', width: 200 },
         { field: 'num_lectures', headerName: 'Lecture Count', width: 150 },
         { field: 'instructor_name', headerName: 'Instructor Name', width: 200 },
-        // { field: 'category', headerName: 'Category', width: 200 },
         // { field: 'published_time', headerName: 'Published Date', width: 200 },
         { field: 'avg_rating', headerName: 'Rating', width: 100 },
         { field: 'num_reviews', headerName: 'Review Count', width: 150 },
