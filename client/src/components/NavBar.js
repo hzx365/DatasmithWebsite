@@ -47,6 +47,16 @@ export default function NavBar() {
             .catch(error => console.error('Error fetching random job ID:', error));
     };
 
+    const fetchRandomCourseId = () => {
+        fetch(`http://${config.server_host}:${config.server_port}/random_course`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.course_id){
+                    setJobId(data.course_id);
+                }
+            })
+    }
+
     // Navigate to the job details page when jobId state updates
     useEffect(() => {
         if (jobId) {
@@ -61,8 +71,8 @@ export default function NavBar() {
                     <NavText href='/' text='JobEra' isMain />
                     <NavText href='/search_jobs' text='SEARCH JOBS' />
                     <NavText href='/search_courses' text='SEARCH COURSES' />
-                    <NavText href='#' text='JOB DETAILS' onClick={fetchRandomJobId} /> {/* Modified to use NavText */}
-                    <NavText href='/course/:course_id' text='COURSE DETAILS' />
+                    <NavText href='#' text='JOB DETAILS' onClick={fetchRandomJobId} />
+                    <NavText href='#' text='COURSE DETAILS' onClick={fetchRandomCourseId} />
                 </Toolbar>
             </Container>
         </AppBar>
