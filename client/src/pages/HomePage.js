@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Container, Divider, Link } from '@mui/material';
 import LazyTable from '../components/LazyTable';
 import config from '../config.json';
@@ -19,7 +18,6 @@ export default function HomePage() {
                 <Link href={`/job/${row.job_uid}`}>{row.job_title}</Link>
             ),
         },
-        //{ field: 'job_title', headerName: 'Job Title', width: 200 },
         { field: 'employer_name', headerName: 'Employer', width: 200 },
         { field: 'category', headerName: 'Category', width: 130 },
         { field: 'city', headerName: 'City', width: 130 },
@@ -45,9 +43,14 @@ export default function HomePage() {
         { field: 'price', headerName: 'Price', type: 'number', width: 90 },
         { field: 'num_subscribers', headerName: 'Subscribers', type: 'number', width: 130 }
     ];
-
+    const containerStyle = {
+        backgroundColor: '#f9f9f9', // Background color added here
+        padding: '20px', // Adjust padding as needed
+        borderRadius: '5px', // Add border radius for a rounded look
+        border: '1px solid #ccc' // Add border for distinction
+    };
     return (
-        <Container>
+        <Container Style={containerStyle}>
             <h2>Top Jobs</h2>
             <LazyTable route={`http://${config.server_host}:${config.server_port}/top_jobs`} columns={jobColumns} defaultPageSize={5} rowsPerPageOptions={[5, 10, 25]} />
             <Divider style={{ marginTop: 20, marginBottom: 20 }} />

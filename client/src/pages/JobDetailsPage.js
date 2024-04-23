@@ -51,7 +51,7 @@ const JobDetailsPage = () => {
         backgroundColor: '#f9f9f9'
     };
     const gridItemStyle = {
-        marginBottom: '10px'
+        marginBottom: '10px',
     };
 
     return (

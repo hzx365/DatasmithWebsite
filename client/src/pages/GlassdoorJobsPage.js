@@ -65,12 +65,22 @@ export default function GlassdoorJobsPage() {
         { field: 'category', headerName: 'Category', width: 150 },
         { field: 'discover_date', headerName: 'Posted Date', width: 150 },
     ];
+    const containerStyle = {
+        marginTop: '20px',
+        padding: '20px',
+        border: '1px solid #ccc',
+        borderRadius: '5px',
+        backgroundColor: '#f9f9f9'
+    };
 
+    const gridItemStyle = {
+        marginBottom: '10px'
+    };
     return (
-        <Container>
-            <h2>Search Jobs</h2>
+        <Container style={containerStyle}>
+            <h2 style={{ marginBottom: '20px' }}>Search Jobs</h2>
             <Grid container spacing={3}>
-                <Grid item xs={4}>
+                <Grid item xs={4} style={gridItemStyle}>
                     <FormControl fullWidth>
                         <InputLabel>City</InputLabel>
                         <Select
@@ -84,7 +94,7 @@ export default function GlassdoorJobsPage() {
                         </Select>
                     </FormControl>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={4} style={gridItemStyle}>
                     <FormControl fullWidth>
                         <InputLabel>Country</InputLabel>
                         <Select
@@ -98,7 +108,7 @@ export default function GlassdoorJobsPage() {
                         </Select>
                     </FormControl>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={4} style={gridItemStyle}>
                     <FormControl fullWidth>
                         <InputLabel>Category</InputLabel>
                         <Select
@@ -121,7 +131,7 @@ export default function GlassdoorJobsPage() {
             >
                 Search
             </Button>
-            <h2>Job Results</h2>
+            <h2 style={{ marginBottom: '20px' }}>Job Results</h2>
             <DataGrid
                 rows={data}
                 columns={columns}
