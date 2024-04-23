@@ -43,19 +43,29 @@ const JobDetailsPage = () => {
             renderCell: (row) => new Date(row.review_date).toLocaleDateString(),
         },
     ];
+    const containerStyle = {
+        marginTop: '20px',
+        padding: '20px',
+        border: '1px solid #ccc',
+        borderRadius: '5px',
+        backgroundColor: '#f9f9f9'
+    };
+    const gridItemStyle = {
+        marginBottom: '10px'
+    };
 
     return (
-        <Container>
-            <h1>{jobDetails.job_title}</h1>
-            <Grid container spacing={2} columns={4}>
-                <Grid item xs={2}>
-                    Employer: {jobDetails.employer_name}
+        <Container style={containerStyle}>
+            <h1 >{jobDetails.job_title}</h1>
+            <Grid container spacing={2}>
+                <Grid item xs={4} style={gridItemStyle}>
+                    <strong>Employer:</strong> {jobDetails.employer_name}
                 </Grid>
-                <Grid item xs={1}>
-                    Category: {jobDetails.category}
+                <Grid item xs={4} style={gridItemStyle}>
+                    <strong>Category:</strong> {jobDetails.category}
                 </Grid>
-                <Grid item xs={1}>
-                    Location: {jobDetails.city}, {jobDetails.country}
+                <Grid item xs={4} style={gridItemStyle}>
+                    <strong>Location:</strong> {jobDetails.city}, {jobDetails.country}
                 </Grid>
             </Grid>
             <h2>Description</h2>
