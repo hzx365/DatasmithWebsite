@@ -1,4 +1,4 @@
-import { Container, Divider, Link } from '@mui/material';
+import { Container, Divider, Link, Typography } from '@mui/material';
 import LazyTable from '../components/LazyTable';
 import config from '../config.json';
 const { server_host, server_port } = config;
@@ -53,7 +53,12 @@ export default function HomePage() {
     };
     return (
         <Container Style={containerStyle}>
-            <h2>Top Jobs</h2>
+            <Typography variant="h4" style={{ marginTop: '20px', marginBottom: '20px', textAlign: 'center', fontFamily: 'Source Sans Pro, sans-serif', color: 'rgb(0, 83, 203)',  fontWeight: 700  }}>
+                Welcome to JobEra!
+            </Typography>
+                <h2>
+                    Top Jobs
+                </h2>
             <LazyTable route={`http://${config.server_host}:${config.server_port}/top_jobs`} columns={jobColumns} defaultPageSize={5} rowsPerPageOptions={[5, 10, 25]} />
             <Divider style={{ marginTop: 20, marginBottom: 20 }} />
             <h2>Top Courses</h2>
