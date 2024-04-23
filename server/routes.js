@@ -250,14 +250,16 @@ const search_courses = async function (req, res) {
   const language = req.query.language;
   const rating = parseFloat(req.query.rating);
   const category = req.query.category;
+  const price = parseFloat(req.query.price);
+
 
   if (!page) {
     connection.query(`
     SELECT *
     FROM Course_Info
-    WHERE Course_Info.language = ? AND Course_Info.avg_rating = ? AND Course_Info.category = ?
+    WHERE Course_Info.language = ? AND Course_Info.avg_rating = ? AND Course_Info.category = ? AND Course_Info.price = ?
     ORDER BY Course_Info.num_subscribers DESC;`,
-      [language, rating, category],
+      [language, rating, category, price],
       (err, data) => {
         if (err || data.length === 0) {
           console.log(err);
@@ -272,10 +274,10 @@ const search_courses = async function (req, res) {
     connection.query(`
     SELECT *
     FROM Course_Info
-    WHERE Course_Info.language = ? AND Course_Info.avg_rating = ? AND Course_Info.category = ?
+    WHERE Course_Info.language = ? AND Course_Info.avg_rating = ? AND Course_Info.category = ? AND Course_Info.price = ?
     ORDER BY Course_Info.num_subscribers DESC
     LIMIT ? OFFSET ?;`,
-      [language, rating, category, pageSizeNum, offSet],
+      [language, rating, category, price, pageSizeNum, offSet],
       (err, data) => {
         if (err || data.length === 0) {
           console.log(err);
@@ -288,6 +290,37 @@ const search_courses = async function (req, res) {
 
 }
 
+const search_courses_categories = async function (req, res) {
+  connection.query(`
+  SELECT category
+  FROM Category
+  ORDER BY category ASC;`,
+    (err, data) => {
+      if (err) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data.map(d => d.category));
+      }
+    });
+};
+
+
+
+const search_courses_languages = async function (req, res) {
+  connection.query(`
+  SELECT DISTINCT language
+  FROM Course_Info
+  ORDER BY language ASC;`,
+    (err, data) => {
+      if (err) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data.map(d => d.language));
+      }
+    });
+};
 
 /***************************
  *     Job Details Page    *
@@ -533,5 +566,7 @@ module.exports = {
   course,//@lulu
   course_jobs, //@lulu
   search_courses, //@lulu
+  search_courses_categories, //@lulu
+  search_courses_languages, //@lulu
   course_comments //@yuanmin
 }

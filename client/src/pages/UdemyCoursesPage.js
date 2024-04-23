@@ -1,28 +1,49 @@
 import { useEffect, useState } from 'react';
-import { Button, Container, Grid, TextField } from '@mui/material';
+import { Button, Container, Grid, TextField, MenuItem, Select, InputLabel, FormControl, Link, Slider } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import config from '../config.json';
 const { server_host, server_port } = config;
 
+
 export default function GlassdoorJobsPage() {
     const [data, setData] = useState([]);
     const [pageSize, setPageSize] = useState(10);
-    const [city, setCity] = useState('');
-    const [country, setCountry] = useState('');
-    const [category, setCategory] = useState('');
+    // const [city, setCity] = useState('');
+    const [language, setLanguage] = useState('English');
+    // const [country, setCountry] = useState('');
+    const [rating, setRating] = useState(5);
+    const [category, setCategory] = useState('IT & Software');
     const [page, setPage] = useState(1);
+    const [price, setPrice] = useState(99);
+
+    // const languages = ["Any", "English", "Portuguese", "Spanish", "Turkish", "Japnese"]
+    const [categories, setCategories] = useState([]);
+    const [languages, setLanguages] = useState([]);
 
     useEffect(() => {
         fetchJobs();
     }, [page]);
 
     const fetchJobs = () => {
-        fetch(`http://${server_host}:${server_port}/search_jobs?city=${city}&country=${country}&category=${category}&page=${page}&page_size=${pageSize}`)
+
+        fetch(`http://${server_host}:${server_port}/search_courses?language=${encodeURIComponent(language)}&rating=${rating}&category=${encodeURIComponent(category)}&price=${price}&page=${page}&page_size=${pageSize}`)
             .then(res => res.json())
             .then(resJson => {
                 setData(resJson);
             })
             .catch(error => console.error('Error fetching jobs:', error));
+        
+        fetch(`http://${server_host}:${server_port}/search_jobs/categories`)
+            .then(res => res.json())
+            .then(resJson => {
+                setCategories(resJson);
+        });
+
+        fetch(`http://${server_host}:${server_port}/search_courses/languages`)
+            .then(res => res.json())
+            .then(resJson => {
+                setLanguages(resJson);
+        });
     };
 
     const handleSearch = () => {
@@ -30,45 +51,105 @@ export default function GlassdoorJobsPage() {
         fetchJobs();
     };
 
+
     const columns = [
-        { field: 'job_id', headerName: 'Job ID', width: 100 },
-        { field: 'title', headerName: 'Title', width: 200 },
-        { field: 'company', headerName: 'Company', width: 200 },
-        { field: 'city', headerName: 'City', width: 150 },
-        { field: 'country', headerName: 'Country', width: 150 },
-        { field: 'category', headerName: 'Category', width: 150 },
-        { field: 'discover_date', headerName: 'Posted Date', width: 150 },
+        { field: 'id', headerName: 'Course ID', width: 100 },
+        {
+            field: 'title',
+            headerName: 'Title',
+            width: 450,
+            renderCell: (params) => (
+                <Link href={`/course/${params.id}`}>{params.value}</Link>
+            )
+        },
+        // { field: 'company', headerName: 'Company', width: 200 },
+        { field: 'num_lectures', headerName: 'Lecture Count', width: 150 },
+        { field: 'instructor_name', headerName: 'Instructor Name', width: 200 },
+        // { field: 'category', headerName: 'Category', width: 200 },
+        // { field: 'published_time', headerName: 'Published Date', width: 200 },
+        { field: 'avg_rating', headerName: 'Rating', width: 100 },
+        { field: 'num_reviews', headerName: 'Review Count', width: 150 },
+
+
     ];
 
     return (
         <Container>
-            <h2>Search Jobs</h2>
-            <Grid container spacing={3}>
+            <h2>Search Courses</h2>
+            <Grid container spacing={20}>
                 <Grid item xs={4}>
-                    <TextField
-                        label="City"
-                        value={city}
-                        onChange={(e) => setCity(e.target.value)}
-                        fullWidth
-                    />
+                    <FormControl fullWidth>
+                        <InputLabel>Language</InputLabel>
+                        <Select
+                            value={language}
+                            label="Language"
+                            onChange={(e) => setLanguage(e.target.value)}
+                        >
+                            {languages.map((language) => (
+                                <MenuItem key={language} value={language}>{language}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                 </Grid>
+
                 <Grid item xs={4}>
-                    <TextField
-                        label="Country"
-                        value={country}
-                        onChange={(e) => setCountry(e.target.value)}
-                        fullWidth
-                    />
+                    <FormControl fullWidth>
+                        <InputLabel>Category</InputLabel>
+                        <Select
+                            value={category}
+                            label="Category"
+                            onChange={(e) => setCategory(e.target.value)}
+                        >
+                            {categories.map((category) => (
+                                <MenuItem key={category} value={category}>{category}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
                 </Grid>
-                <Grid item xs={4}>
-                    <TextField
-                        label="Category"
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                        fullWidth
-                    />
-                </Grid>
+
+                {/* <Grid item xs={4}>
+                <p>Rating</p>
+                <Slider
+                    value={rating}
+                    min={0}
+                    max={5}
+                    step={0.01}
+                    onChange={(e, newValue) => setRating(newValue)}
+                    valueLabelDisplay='auto'
+                    // valueLabelFormat={value => <div>{formatDuration(value)}</div>}
+                />
+                </Grid>  */}
             </Grid>
+            
+            <Grid container spacing={15}>
+                <Grid item xs={3.5}>
+                <p>Rating</p>
+                <Slider
+                    value={rating}
+                    min={0}
+                    max={5}
+                    step={0.5}
+                    onChange={(e, newValue) => setRating(newValue)}
+                    valueLabelDisplay='auto'
+                />
+                </Grid> 
+
+                <Grid item xs={5}>
+                <p>Price</p>
+                <Slider
+                    value={price}
+                    min={0}
+                    max={199}
+                    step={1}
+                    onChange={(e, newValue) => setPrice(newValue)}
+                    valueLabelDisplay='auto'
+                />
+                </Grid> 
+
+            </Grid>
+
+
             <Button
                 onClick={handleSearch}
                 variant="contained"
@@ -77,7 +158,7 @@ export default function GlassdoorJobsPage() {
             >
                 Search
             </Button>
-            <h2>Job Results</h2>
+            <h2>Course Results</h2>
             <DataGrid
                 rows={data}
                 columns={columns}
@@ -91,4 +172,7 @@ export default function GlassdoorJobsPage() {
             />
         </Container>
     );
+
+
+  
 }

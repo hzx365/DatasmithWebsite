@@ -24,6 +24,8 @@ app.get('/search_jobs/countries', routes.search_jobs_countries); // (4.3) @yuanm
 
 // course page:
 app.get('/search_courses', routes.search_courses); // (5) @lulu
+app.get('/search_jobs/categories', routes.search_courses_categories); // (5.1) @lulu
+app.get('/search_courses/languages', routes.search_courses_languages); //(5.2) @lulu
 
 // job details:
 app.get('/job/:job_uid', routes.job); // (6) @yuanmin
