@@ -37,6 +37,9 @@ app.get('/course/:course_id', routes.course);// (9) @lulu
 app.get('/course/:course_id/jobs', routes.course_jobs) // (10) @lulu
 app.get('/course/:course_id/comments', routes.course_comments) // (11) @yuanmin
 
+// get random functions in NavBar
+app.get('/random_job', routes.get_random_job);// (9) @lulu
+app.get('/random_course', routes.get_random_course) // (10) @lulu
 
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)
