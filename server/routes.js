@@ -258,14 +258,14 @@ const search_city_given_country = async (req, res) => {
       SELECT DISTINCT country
       FROM Jobs
       ORDER BY country ASC;`,
-        (err, data) => {
-          if (err) {
-            console.log(err);
-            res.status(500).json([]);
-          } else {
-            res.json(data.map(d => d.country));
-          }
-        });
+      (err, data) => {
+        if (err) {
+          console.log(err);
+          res.status(500).json([]);
+        } else {
+          res.json(data.map(d => d.country));
+        }
+      });
   } else {
     // Fetch and return cities for the given country
     connection.query(`
@@ -273,15 +273,15 @@ const search_city_given_country = async (req, res) => {
       FROM Jobs
       WHERE country = ?
       ORDER BY city ASC;`,
-        [country], // Use the country from the request to filter the SQL query
-        (err, data) => {
-          if (err) {
-            console.log(err);
-            res.status(500).json([]);
-          } else {
-            res.json(data.map(d => d.city));
-          }
-        });
+      [country], // Use the country from the request to filter the SQL query
+      (err, data) => {
+        if (err) {
+          console.log(err);
+          res.status(500).json([]);
+        } else {
+          res.json(data.map(d => d.city));
+        }
+      });
   }
 }
 
@@ -457,7 +457,21 @@ const job_courses = async function (req, res) {
     });
   }
 }
-
+// Route 7.1: Get/job/:job_uid/numCourses
+const job_courses_num = async function (req, res) {
+  const requestID = req.params.job_uid;
+  connection.query(`
+    SELECT num_courses
+    FROM Jobs_NumCourses
+    WHERE job_uid = ?`, [requestID], (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json({});
+    } else {
+      res.json(data[0]);
+    }
+  });
+}
 // Route 8: GET /job/:job_uid/reviews
 const job_reviews = async function (req, res) {
   // return all reviews of a job given job_uid, when you click reviews hyperlink in job details page, you will be redirected to the page of this job's reviews
@@ -573,6 +587,21 @@ const course_jobs = async function (req, res) {
 
 }
 
+// Route 10.1: Get/course/:course_id/numJobs
+const course_jobs_num = async function (req, res) {
+  const requestID = req.params.course_id;
+  connection.query(`
+    SELECT num_jobs
+    FROM Courses_NumJobs
+    WHERE course_id = ?`, [requestID], (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json({});
+    } else {
+      res.json(data[0]);
+    }
+  });
+}
 // Route 11: GET /course/:course_id/comments
 const course_comments = async function (req, res) {
   // return all comments of a course given course_id, when you click reviews hyperlink in job details page, you will be redirected to the page of this job's reviews
@@ -620,47 +649,47 @@ const course_comments = async function (req, res) {
  *   Random id in NavBar   *
  **************************/
 // Route 12: GET /job/random_job_uid
-const get_random_job = async function(req, res) {
+const get_random_job = async function (req, res) {
   connection.query(`
     SELECT uid AS job_uid
     FROM Jobs
     ORDER BY RAND()
     LIMIT 1;`,
-      (err, data) => {
-        if (err) {
-          console.log(err);
-          res.status(500).json({ message: "Error retrieving random job UID", error: err });
+    (err, data) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json({ message: "Error retrieving random job UID", error: err });
+      } else {
+        // Assuming data is an array of rows and we're selecting one row
+        if (data.length > 0) {
+          res.json({ job_uid: data[0].job_uid });
         } else {
-          // Assuming data is an array of rows and we're selecting one row
-          if (data.length > 0) {
-            res.json({ job_uid: data[0].job_uid });
-          } else {
-            res.status(404).json({ message: "No jobs found" });
-          }
+          res.status(404).json({ message: "No jobs found" });
         }
-      });
+      }
+    });
 };
 
 // Route 13: GET /course/random_course_id
-const get_random_course = async function(req, res) {
+const get_random_course = async function (req, res) {
   connection.query(`
     SELECT id AS course_id
     FROM Course_Info
     ORDER BY RAND()
     LIMIT 1;`,
-      (err, data) => {
-        if (err) {
-          console.log(err);
-          res.status(500).json({ message: "Error retrieving random course ID", error: err });
+    (err, data) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json({ message: "Error retrieving random course ID", error: err });
+      } else {
+        // Assuming data is an array of rows and we're selecting one row
+        if (data.length > 0) {
+          res.json({ course_id: data[0].course_id });
         } else {
-          // Assuming data is an array of rows and we're selecting one row
-          if (data.length > 0) {
-            res.json({ course_id: data[0].course_id });
-          } else {
-            res.status(404).json({ message: "No courses found" });
-          }
+          res.status(404).json({ message: "No courses found" });
         }
-      });
+      }
+    });
 };
 
 
@@ -673,6 +702,7 @@ module.exports = {
 
   job, //@yuanmin
   job_courses, //@yuanmin
+  job_courses_num, //@yuanmin
   search_jobs, //@yuanmin
   search_jobs_categories, //@yuanmin
   search_jobs_cities, //@yuanmin
@@ -683,6 +713,7 @@ module.exports = {
 
   course,//@lulu
   course_jobs, //@lulu
+  course_jobs_num, //@yuanmin
   search_courses, //@lulu
   search_courses_categories, //@lulu
   search_courses_languages, //@lulu

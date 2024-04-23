@@ -32,12 +32,14 @@ app.get('/search_courses/languages', routes.search_courses_languages); //(5.2) @
 // job details:
 app.get('/job/:job_uid', routes.job); // (6) @yuanmin
 app.get('/job/:job_uid/courses', routes.job_courses); // (7) @yuanmin
+app.get('/job/:job_uid/numCourses', routes.job_courses_num); // (7.1) @yuanmin
 app.get('/job/:job_uid/reviews', routes.job_reviews); // (8) @yuanmin
 
 
 // course details:
 app.get('/course/:course_id', routes.course);// (9) @lulu
 app.get('/course/:course_id/jobs', routes.course_jobs) // (10) @lulu
+app.get('/course/:course_id/numJobs', routes.course_jobs_num) //(10.1) @yuanmin
 app.get('/course/:course_id/comments', routes.course_comments) // (11) @yuanmin
 
 // get random functions in NavBar
