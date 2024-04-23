@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, Divider, Grid } from '@mui/material';
+import { Container, Divider, Grid, Link } from '@mui/material';
 import LazyTable from '../components/LazyTable';
 import config from "../config.json";
 
@@ -18,17 +18,16 @@ const JobDetailsPage = () => {
             .catch(err => console.error(`Failed to fetch job details:`, err));
     }, [job_uid]);
 
-    const jobDetailsColumns = [
-        { field: 'job_title', headerName: 'Job Title', width: 200 },
-        { field: 'employer_name', headerName: 'Employer', width: 200 },
-        { field: 'description', headerName: 'Description', width: 300 },
-        { field: 'city', headerName: 'City', width: 130 },
-        { field: 'country', headerName: 'Country', width: 130 },
-        { field: 'category', headerName: 'Category', width: 130 },
-    ];
 
     const courseColumns = [
-        { field: 'course_title', headerName: 'Course Title', width: 200 },
+        {
+            field: 'course_title',
+            headerName: 'Course Title',
+            width: 200,
+            renderCell: (row) => (
+                <Link href={`/course/${row.course_id}`}>{row.course_title}</Link>
+            ),
+        },
         { field: 'instructor_name', headerName: 'Instructor', width: 200 },
         { field: 'language', headerName: 'Language', width: 130 },
         { field: 'avg_rating', headerName: 'Average Rating', width: 130, type: 'number' },
@@ -53,10 +52,10 @@ const JobDetailsPage = () => {
                     Employer: {jobDetails.employer_name}
                 </Grid>
                 <Grid item xs={1}>
-                    {jobDetails.category}
+                    Category: {jobDetails.category}
                 </Grid>
                 <Grid item xs={1}>
-                    {jobDetails.city}, {jobDetails.country}
+                    Location: {jobDetails.city}, {jobDetails.country}
                 </Grid>
             </Grid>
             <h2>Description</h2>
