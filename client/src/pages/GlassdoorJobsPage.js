@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Container, Grid, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { Button, Container, Grid, MenuItem, Select, InputLabel, FormControl, Link } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import config from '../config.json';
 const { server_host, server_port } = config;
@@ -51,7 +51,14 @@ export default function GlassdoorJobsPage() {
 
     const columns = [
         { field: 'job_id', headerName: 'Job ID', width: 100 },
-        { field: 'job_title', headerName: 'Title', width: 200 },
+        {
+            field: 'job_title',
+            headerName: 'Title',
+            width: 200,
+            renderCell: (params) => (
+                <Link href={`/job/${params.id}`}>{params.value}</Link>
+            ),
+        },
         { field: 'employer_name', headerName: 'Company', width: 200 },
         { field: 'city', headerName: 'City', width: 150 },
         { field: 'country', headerName: 'Country', width: 150 },
