@@ -34,6 +34,7 @@ function NavText({ href, text, isMain, onClick }) {
 export default function NavBar() {
     const navigate = useNavigate();
     const [jobId, setJobId] = useState(null);
+    const [courseId, setCourseId] = useState(null);
 
     // Function to fetch a random job ID from the server
     const fetchRandomJobId = () => {
@@ -52,9 +53,10 @@ export default function NavBar() {
             .then(response => response.json())
             .then(data => {
                 if (data && data.course_id){
-                    setJobId(data.course_id);
+                    setCourseId(data.course_id);
                 }
             })
+            .catch(error => console.error('Error fetching random course ID:', error));
     }
 
     // Navigate to the job details page when jobId state updates
@@ -62,7 +64,13 @@ export default function NavBar() {
         if (jobId) {
             navigate(`/job/${jobId}`);
         }
-    }, [jobId, navigate]);
+    }, [jobId]);
+
+    useEffect(() => {
+        if (courseId) {
+            navigate(`/course/${courseId}`);
+        }
+    }, [courseId]);
 
     return (
         <AppBar position='static'>

@@ -9,12 +9,17 @@ const { server_host, server_port } = config;
 const JobDetailsPage = () => {
     const { job_uid } = useParams();
     const [jobDetails, setJobDetails] = useState({});
+    const [numCourses, setNumCourses] = useState(null);
 
     // Fetch job details when job_uid changes
     useEffect(() => {
         fetch(`http://${server_host}:${server_port}/job/${job_uid}`)
             .then(res => res.json())
             .then(data => setJobDetails(data[0])) // Wrap the single job object inside an array
+            .catch(err => console.error(`Failed to fetch job details:`, err));
+        fetch(`http://${server_host}:${server_port}/job/${job_uid}/numCourses`)
+            .then(res => res.json())
+            .then(data => setNumCourses(data.num_courses)) // Wrap the single job object inside an array
             .catch(err => console.error(`Failed to fetch job details:`, err));
     }, [job_uid]);
 
@@ -66,6 +71,9 @@ const JobDetailsPage = () => {
                 </Grid>
                 <Grid item xs={4} style={gridItemStyle}>
                     <strong>Location:</strong> {jobDetails.city}, {jobDetails.country}
+                </Grid>
+                <Grid item xs={4} style={gridItemStyle}>
+                    <strong>Number of Relevant Courses:</strong> {numCourses}
                 </Grid>
             </Grid>
             <h2>Description</h2>
