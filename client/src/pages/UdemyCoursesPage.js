@@ -9,20 +9,23 @@ export default function GlassdoorJobsPage() {
     const [data, setData] = useState([]);
     const [pageSize, setPageSize] = useState(10);
     const [language, setLanguage] = useState('English');
-    const [rating, setRating] = useState(5);
+    // const [rating, setRating] = useState(5);
     const [category, setCategory] = useState('IT & Software');
     const [page, setPage] = useState(1);
-    const [price, setPrice] = useState(99);
+    // const [price, setPrice] = useState(99);
     const [categories, setCategories] = useState([]);
     const [languages, setLanguages] = useState([]);
+
+    const [priceRange, setPriceRange] = useState([49, 99]);
+    const [ratingRange, setRatingRange] = useState([3,4]);
 
     useEffect(() => {
         fetchJobs();
     }, [page]);
 
     const fetchJobs = () => {
-
-        fetch(`http://${server_host}:${server_port}/search_courses?language=${encodeURIComponent(language)}&rating=${rating}&category=${encodeURIComponent(category)}&price=${price}&page=${page}&page_size=${pageSize}`)
+                                                                                                                        
+        fetch(`http://${server_host}:${server_port}/search_courses?language=${encodeURIComponent(language)}&maxrating=${ratingRange[1]}&minrating=${ratingRange[0]}&category=${encodeURIComponent(category)}&maxprice=${priceRange[1]}&minprice=${priceRange[0]}&page=${page}&page_size=${pageSize}`)
             .then(res => res.json())
             .then(resJson => {
                 setData(resJson);
@@ -58,8 +61,8 @@ export default function GlassdoorJobsPage() {
                 <Link href={`/course/${params.id}`}>{params.value}</Link>
             )
         },
-        { field: 'num_lectures', headerName: 'Lecture Count', width: 150 },
-        { field: 'instructor_name', headerName: 'Instructor Name', width: 200 },
+        { field: 'price', headerName: 'Price', width: 80 },
+        { field: 'instructor_name', headerName: 'Instructor Name', width: 270 },
         // { field: 'published_time', headerName: 'Published Date', width: 200 },
         { field: 'avg_rating', headerName: 'Rating', width: 100 },
         { field: 'num_reviews', headerName: 'Review Count', width: 150 },
@@ -116,8 +119,8 @@ export default function GlassdoorJobsPage() {
                 </Grid>  */}
             </Grid>
             
-            <Grid container spacing={15}>
-                <Grid item xs={3.5}>
+            <Grid container spacing={23}>
+                {/* <Grid item xs={3.5}>
                 <p>Rating</p>
                 <Slider
                     value={rating}
@@ -127,9 +130,24 @@ export default function GlassdoorJobsPage() {
                     onChange={(e, newValue) => setRating(newValue)}
                     valueLabelDisplay='auto'
                 />
-                </Grid> 
+                </Grid>  */}
 
-                <Grid item xs={5}>
+                <Grid item xs={3.8}>
+                <p>
+                    Rating Range
+                </p>
+                <Slider
+                    value={ratingRange}
+                    onChange={(event, newRatingRange) => setRatingRange(newRatingRange)}
+                    valueLabelDisplay="auto"
+                    aria-labelledby="range-slider"
+                    min={0}
+                    max={5}
+                    step={0.1}
+                />
+                </Grid>
+
+                {/* <Grid item xs={5}>
                 <p>Price</p>
                 <Slider
                     value={price}
@@ -139,7 +157,27 @@ export default function GlassdoorJobsPage() {
                     onChange={(e, newValue) => setPrice(newValue)}
                     valueLabelDisplay='auto'
                 />
-                </Grid> 
+                </Grid>  */}
+
+
+
+                <Grid item xs={4}>
+                <p>
+                    Price Range
+                </p>
+                <Slider
+                    value={priceRange}
+                    onChange={(event, newPriceRange) => setPriceRange(newPriceRange)}
+                    valueLabelDisplay="auto"
+                    aria-labelledby="range-slider"
+                    min={0}
+                    max={199}
+                    step={1}
+                />
+                </Grid>
+
+
+            
 
             </Grid>
 

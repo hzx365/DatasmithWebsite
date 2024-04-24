@@ -318,16 +318,21 @@ const search_courses = async function (req, res) {
   const language = req.query.language;
   const rating = parseFloat(req.query.rating);
   const category = req.query.category;
-  const price = parseFloat(req.query.price);
-
+  const max_price = parseInt(req.query.maxprice);
+  const min_price = parseInt(req.query.minprice);
+  const max_rating = parseFloat(req.query.maxrating);
+  const min_rating = parseFloat(req.query.minrating);
 
   if (!page) {
     connection.query(`
     SELECT *
     FROM Course_Info
-    WHERE Course_Info.language = ? AND Course_Info.avg_rating = ? AND Course_Info.category = ? AND Course_Info.price = ?
+    WHERE Course_Info.language = ? 
+    AND Course_Info.avg_rating <= ? AND Course_Info.avg_rating >= ?
+    AND Course_Info.category = ? 
+    AND Course_Info.price <= ? AND Course_Info.price >= ?
     ORDER BY Course_Info.num_subscribers DESC;`,
-      [language, rating, category, price],
+      [language, max_rating, min_rating, category, max_price, min_price],
       (err, data) => {
         if (err || data.length === 0) {
           console.log(err);
@@ -342,10 +347,14 @@ const search_courses = async function (req, res) {
     connection.query(`
     SELECT *
     FROM Course_Info
-    WHERE Course_Info.language = ? AND Course_Info.avg_rating = ? AND Course_Info.category = ? AND Course_Info.price = ?
+    WHERE Course_Info.language = ? 
+    AND Course_Info.avg_rating <= ? AND Course_Info.avg_rating >= ?
+    AND Course_Info.category = ? 
+    AND Course_Info.price <= ? AND Course_Info.price >= ?
+
     ORDER BY Course_Info.num_subscribers DESC
     LIMIT ? OFFSET ?;`,
-      [language, rating, category, price, pageSizeNum, offSet],
+      [language, max_rating, min_rating, category, max_price, min_price, pageSizeNum, offSet],
       (err, data) => {
         if (err || data.length === 0) {
           console.log(err);
