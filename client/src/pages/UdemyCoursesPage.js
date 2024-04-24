@@ -17,32 +17,32 @@ export default function GlassdoorJobsPage() {
     const [languages, setLanguages] = useState([]);
 
     const [priceRange, setPriceRange] = useState([49, 99]);
-    const [ratingRange, setRatingRange] = useState([3,4]);
+    const [ratingRange, setRatingRange] = useState([3, 4]);
 
     useEffect(() => {
         fetchJobs();
-    }, [page]);
+    }, [page, pageSize]);
 
     const fetchJobs = () => {
-                                                                                                                        
+
         fetch(`http://${server_host}:${server_port}/search_courses?language=${encodeURIComponent(language)}&maxrating=${ratingRange[1]}&minrating=${ratingRange[0]}&category=${encodeURIComponent(category)}&maxprice=${priceRange[1]}&minprice=${priceRange[0]}&page=${page}&page_size=${pageSize}`)
             .then(res => res.json())
             .then(resJson => {
                 setData(resJson);
             })
             .catch(error => console.error('Error fetching jobs:', error));
-        
+
         fetch(`http://${server_host}:${server_port}/search_jobs/categories`)
             .then(res => res.json())
             .then(resJson => {
                 setCategories(resJson);
-        });
+            });
 
         fetch(`http://${server_host}:${server_port}/search_courses/languages`)
             .then(res => res.json())
             .then(resJson => {
                 setLanguages(resJson);
-        });
+            });
     };
 
     const handleSearch = () => {
@@ -118,7 +118,7 @@ export default function GlassdoorJobsPage() {
                 />
                 </Grid>  */}
             </Grid>
-            
+
             <Grid container spacing={23}>
                 {/* <Grid item xs={3.5}>
                 <p>Rating</p>
@@ -133,18 +133,18 @@ export default function GlassdoorJobsPage() {
                 </Grid>  */}
 
                 <Grid item xs={3.8}>
-                <p>
-                    Rating Range
-                </p>
-                <Slider
-                    value={ratingRange}
-                    onChange={(event, newRatingRange) => setRatingRange(newRatingRange)}
-                    valueLabelDisplay="auto"
-                    aria-labelledby="range-slider"
-                    min={0}
-                    max={5}
-                    step={0.1}
-                />
+                    <p>
+                        Rating Range
+                    </p>
+                    <Slider
+                        value={ratingRange}
+                        onChange={(event, newRatingRange) => setRatingRange(newRatingRange)}
+                        valueLabelDisplay="auto"
+                        aria-labelledby="range-slider"
+                        min={0}
+                        max={5}
+                        step={0.1}
+                    />
                 </Grid>
 
                 {/* <Grid item xs={5}>
@@ -162,22 +162,22 @@ export default function GlassdoorJobsPage() {
 
 
                 <Grid item xs={4}>
-                <p>
-                    Price Range
-                </p>
-                <Slider
-                    value={priceRange}
-                    onChange={(event, newPriceRange) => setPriceRange(newPriceRange)}
-                    valueLabelDisplay="auto"
-                    aria-labelledby="range-slider"
-                    min={0}
-                    max={199}
-                    step={1}
-                />
+                    <p>
+                        Price Range
+                    </p>
+                    <Slider
+                        value={priceRange}
+                        onChange={(event, newPriceRange) => setPriceRange(newPriceRange)}
+                        valueLabelDisplay="auto"
+                        aria-labelledby="range-slider"
+                        min={0}
+                        max={199}
+                        step={1}
+                    />
                 </Grid>
 
 
-            
+
 
             </Grid>
 
@@ -206,5 +206,5 @@ export default function GlassdoorJobsPage() {
     );
 
 
-  
+
 }
