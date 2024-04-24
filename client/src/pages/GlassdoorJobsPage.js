@@ -43,6 +43,10 @@ export default function GlassdoorJobsPage() {
         }
     }, [country, city]);
 
+    useEffect(() => {
+        fetchJobs();
+    }, [page, pageSize])
+
     const fetchJobs = () => {
         fetch(`http://${server_host}:${server_port}/search_jobs?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&category=${encodeURIComponent(category)}&page=${page}&page_size=${pageSize}`)
             .then(res => res.json())
