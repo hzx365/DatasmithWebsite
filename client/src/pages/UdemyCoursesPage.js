@@ -13,7 +13,6 @@ export default function GlassdoorJobsPage() {
     const [category, setCategory] = useState('IT & Software');
     const [page, setPage] = useState(1);
     const [price, setPrice] = useState(99);
-
     const [categories, setCategories] = useState([]);
     const [languages, setLanguages] = useState([]);
 
