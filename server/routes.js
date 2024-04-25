@@ -190,21 +190,6 @@ const search_jobs = async function (req, res) {
 }
 
 const search_jobs_categories = async function (req, res) {
-  connection.query(`
-  SELECT category
-  FROM Category
-  ORDER BY category ASC;`,
-    (err, data) => {
-      if (err) {
-        console.log(err);
-        res.json([]);
-      } else {
-        res.json(data.map(d => d.category));
-      }
-    });
-};
-
-const search_category_given_country_city = async function (req, res) {
   const { country, city } = req.query;
   let query = `
         SELECT DISTINCT category
@@ -234,22 +219,8 @@ const search_category_given_country_city = async function (req, res) {
   });
 };
 
-const search_jobs_cities = async (req, res) => {
-  connection.query(`
-  SELECT DISTINCT city
-  FROM Jobs
-  ORDER BY city ASC;`,
-    (err, data) => {
-      if (err) {
-        console.log(err);
-        res.json([]);
-      } else {
-        res.json(data.map(d => d.city));
-      }
-    });
-};
 
-const search_city_given_country = async (req, res) => {
+const search_jobs_cities = async (req, res) => {
   const country = req.query.country;
 
   if (!country) {
@@ -716,8 +687,6 @@ module.exports = {
   search_jobs_categories, //@yuanmin
   search_jobs_cities, //@yuanmin
   search_jobs_countries, //@yuanmin
-  search_city_given_country, //@ Zhixiang
-  search_category_given_country_city, // @ Zhixiang
   job_reviews, //@yuanmin
 
   course,//@lulu
