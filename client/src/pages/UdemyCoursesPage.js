@@ -32,7 +32,7 @@ export default function GlassdoorJobsPage() {
             })
             .catch(error => console.error('Error fetching jobs:', error));
 
-        fetch(`http://${server_host}:${server_port}/search_jobs/categories`)
+        fetch(`http://${server_host}:${server_port}/search_courses/categories`)
             .then(res => res.json())
             .then(resJson => {
                 setCategories(resJson);
