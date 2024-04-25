@@ -353,8 +353,6 @@ const search_courses_categories = async function (req, res) {
     });
 };
 
-
-
 const search_courses_languages = async function (req, res) {
   connection.query(`
   SELECT DISTINCT language
