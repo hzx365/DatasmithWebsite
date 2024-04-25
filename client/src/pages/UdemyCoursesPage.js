@@ -159,8 +159,6 @@ export default function GlassdoorJobsPage() {
                 />
                 </Grid>  */}
 
-
-
                 <Grid item xs={4}>
                     <p>
                         Price Range
@@ -176,11 +174,7 @@ export default function GlassdoorJobsPage() {
                     />
                 </Grid>
 
-
-
-
             </Grid>
-
 
             <Button
                 onClick={handleSearch}

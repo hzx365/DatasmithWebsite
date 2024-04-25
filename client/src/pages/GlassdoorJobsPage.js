@@ -158,7 +158,7 @@ export default function GlassdoorJobsPage() {
                 paginationMode="server"
                 onPageChange={(newPage) => setPage(newPage + 1)}
                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                rowCount={100} // You may need to dynamically adjust this if your API supports total count.
+                rowCount={100}
                 autoHeight
             />
         </Container>

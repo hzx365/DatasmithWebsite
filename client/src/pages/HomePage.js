@@ -9,7 +9,6 @@ export default function HomePage() {
     // as suggested by its name suggesting it loads data "lazily" (i.e., as needed).
 
     const jobColumns = [
-        // { field: 'job_uid', headerName: 'Job UID', width: 200 },
         {
             field: 'job_title',
             headerName: 'Job Title',
@@ -27,8 +26,6 @@ export default function HomePage() {
     ];
 
     const courseColumns = [
-        // { field: 'course_id', headerName: 'Course ID', width: 200 },
-
         {
             field: 'title',
             headerName: 'Course Title',
@@ -46,10 +43,10 @@ export default function HomePage() {
         { field: 'num_subscribers', headerName: 'Subscribers', type: 'number', width: 130 }
     ];
     const containerStyle = {
-        backgroundColor: '#f9f9f9', // Background color added here
-        padding: '20px', // Adjust padding as needed
-        borderRadius: '5px', // Add border radius for a rounded look
-        border: '1px solid #ccc' // Add border for distinction
+        backgroundColor: '#f9f9f9',
+        padding: '20px',
+        borderRadius: '5px',
+        border: '1px solid #ccc'
     };
     return (
         <Container Style={containerStyle}>
