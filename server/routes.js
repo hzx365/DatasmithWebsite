@@ -186,38 +186,22 @@ const search_jobs = async function (req, res) {
         }
       });
   }
-
 }
 
 // Route 4.1: GET /search_jobs/countries
-const search_jobs_categories = async function (req, res) {
-  const { country, city } = req.query;
-  let query = `
-        SELECT DISTINCT category
-        FROM Jobs  -- Assuming categories are stored in the Jobs table and there's a relation or proper columns for it.
-        WHERE 1=1`;
-
-  const params = [];
-
-  if (country) {
-    query += ` AND country = ?`;
-    params.push(country);
-  }
-  if (city) {
-    query += ` AND city = ?`;
-    params.push(city);
-  }
-
-  query += ` ORDER BY category ASC;`;
-
-  connection.query(query, params, (err, data) => {
-    if (err) {
-      console.log(err);
-      res.status(500).json([]);
-    } else {
-      res.json(data.map(d => d.category));
-    }
-  });
+const search_jobs_countries = async (req, res) => {
+  connection.query(`
+  SELECT DISTINCT country
+  FROM Jobs
+  ORDER BY country ASC;`,
+      (err, data) => {
+        if (err) {
+          console.log(err);
+          res.json([]);
+        } else {
+          res.json(data.map(d => d.country));
+        }
+      });
 };
 
 // Route 4.2: GET /search_jobs/cities
@@ -258,19 +242,34 @@ const search_jobs_cities = async (req, res) => {
 }
 
 // Route 4.3: GET /search_jobs/categories
-const search_jobs_countries = async (req, res) => {
-  connection.query(`
-  SELECT DISTINCT country
-  FROM Jobs
-  ORDER BY country ASC;`,
-    (err, data) => {
-      if (err) {
-        console.log(err);
-        res.json([]);
-      } else {
-        res.json(data.map(d => d.country));
-      }
-    });
+const search_jobs_categories = async function (req, res) {
+  const { country, city } = req.query;
+  let query = `
+        SELECT DISTINCT category
+        FROM Jobs  -- Assuming categories are stored in the Jobs table and there's a relation or proper columns for it.
+        WHERE 1=1`;
+
+  const params = [];
+
+  if (country) {
+    query += ` AND country = ?`;
+    params.push(country);
+  }
+  if (city) {
+    query += ` AND city = ?`;
+    params.push(city);
+  }
+
+  query += ` ORDER BY category ASC;`;
+
+  connection.query(query, params, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json([]);
+    } else {
+      res.json(data.map(d => d.category));
+    }
+  });
 };
 
 
