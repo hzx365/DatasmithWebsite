@@ -189,6 +189,7 @@ const search_jobs = async function (req, res) {
 
 }
 
+// Route 4.1: GET /search_jobs/countries
 const search_jobs_categories = async function (req, res) {
   const { country, city } = req.query;
   let query = `
@@ -219,7 +220,7 @@ const search_jobs_categories = async function (req, res) {
   });
 };
 
-
+// Route 4.2: GET /search_jobs/cities
 const search_jobs_cities = async (req, res) => {
   const country = req.query.country;
 
@@ -256,6 +257,7 @@ const search_jobs_cities = async (req, res) => {
   }
 }
 
+// Route 4.3: GET /search_jobs/categories
 const search_jobs_countries = async (req, res) => {
   connection.query(`
   SELECT DISTINCT country
@@ -338,6 +340,7 @@ const search_courses = async function (req, res) {
 
 }
 
+// Route 5.1: GET /search_courses/categories
 const search_courses_categories = async function (req, res) {
   connection.query(`
   SELECT category
@@ -353,6 +356,7 @@ const search_courses_categories = async function (req, res) {
     });
 };
 
+// Route 5.2: GET /search_courses/languages
 const search_courses_languages = async function (req, res) {
   connection.query(`
   SELECT DISTINCT language
@@ -389,7 +393,7 @@ const job = async function (req, res) {
   });
 }
 
-// Route 7: GET /job/:job_uid/courses
+// Route 6.1: GET /job/:job_uid/courses
 const job_courses = async function (req, res) {
   // implement a route that given a job_uid, returns the relavent courses
   const page = req.query.page;
@@ -435,7 +439,8 @@ const job_courses = async function (req, res) {
     });
   }
 }
-// Route 7.1: Get/job/:job_uid/numCourses
+
+// Route 6.2: Get/job/:job_uid/numCourses
 const job_courses_num = async function (req, res) {
   const requestID = req.params.job_uid;
   connection.query(`
@@ -450,7 +455,8 @@ const job_courses_num = async function (req, res) {
     }
   });
 }
-// Route 8: GET /job/:job_uid/reviews
+
+// Route 6.3: GET /job/:job_uid/reviews
 const job_reviews = async function (req, res) {
   // return all reviews of a job given job_uid, when you click reviews hyperlink in job details page, you will be redirected to the page of this job's reviews
   const requestID = req.params.job_uid;
@@ -499,7 +505,7 @@ const job_reviews = async function (req, res) {
  *   Course Details Page   *
  **************************/
 
-// Route 9: GET /course/:course_id
+// Route 7: GET /course/:course_id
 const course = async function (req, res) {
   // implement a route that given a course_id, returns all information about the course
   // save the given course-id to variable requestID
@@ -518,7 +524,7 @@ const course = async function (req, res) {
 }
 
 
-// Route 10: GET /course/:course_id/jobs
+// Route 7.1: GET /course/:course_id/jobs
 const course_jobs = async function (req, res) {
   // TODO (TASK 7): implement a route that given an course_id, returns relavent jobs
   const page = req.query.page;
@@ -565,7 +571,7 @@ const course_jobs = async function (req, res) {
 
 }
 
-// Route 10.1: Get/course/:course_id/numJobs
+// Route 7.2: Get/course/:course_id/numJobs
 const course_jobs_num = async function (req, res) {
   const requestID = req.params.course_id;
   connection.query(`
@@ -580,7 +586,8 @@ const course_jobs_num = async function (req, res) {
     }
   });
 }
-// Route 11: GET /course/:course_id/comments
+
+// Route 7.3: GET /course/:course_id/comments
 const course_comments = async function (req, res) {
   // return all comments of a course given course_id, when you click reviews hyperlink in job details page, you will be redirected to the page of this job's reviews
   const requestID = req.params.course_id;
@@ -626,7 +633,7 @@ const course_comments = async function (req, res) {
 /***************************
  *   Random id in NavBar   *
  **************************/
-// Route 12: GET /job/random_job_uid
+// Route 8: GET /job/random_job_uid
 const get_random_job = async function (req, res) {
   connection.query(`
     SELECT uid AS job_uid
@@ -648,7 +655,7 @@ const get_random_job = async function (req, res) {
     });
 };
 
-// Route 13: GET /course/random_course_id
+// Route 9: GET /course/random_course_id
 const get_random_course = async function (req, res) {
   connection.query(`
     SELECT id AS course_id
